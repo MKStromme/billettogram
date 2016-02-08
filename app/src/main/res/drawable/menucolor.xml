@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <!-- You can change color of menu in menucolor.xml-->
+            <gradient
+                android:startColor="#0088cb"
+                android:endColor="#0088cb"/>
+        </shape>
+    </item>
+</selector>

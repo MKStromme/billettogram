@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+        <item>
+            <shape>
+
+                <gradient
+                    android:startColor="#1199dd"
+                    android:angle="270"
+                    android:centerColor="#0088cc"
+                    android:endColor="#0077bb"/>
+                <stroke
+                    android:width="2px"
+                    android:color="#3333aa"/>
+                <corners
+                    android:radius="2dp"/>
+            </shape>
+            <color android:color="#ffffff"/><!--endre font fargen til hvit-->
+        </item>
+</selector>
