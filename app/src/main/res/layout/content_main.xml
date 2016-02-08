@@ -50,28 +50,33 @@
     <Button
         android:layout_width="140dp"
         android:layout_height="50dp"
-        android:text="Vis"
+        android:text="Kjøp"
         android:textColor="#ffffff"
         android:textSize="18dp"
         android:background="@drawable/backgroundtheme"
-        android:id="@+id/show"
+        android:id="@+id/buy"
         android:layout_alignTop="@+id/koppong"
         android:layout_toEndOf="@+id/koppong" />
-    <ListView
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        android:background="#ffffff"
-        android:layout_marginBottom="60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true">
-    </ListView>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button"
+        android:text="Mine Billetter"
+        android:textColor="#ffffff"
+        android:textSize="18dp"
+        android:layout_marginTop="-5dp"
+        android:id="@+id/show"
+        android:background="@drawable/backgroundtheme"
         android:layout_below="@+id/logo"
         android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/show" />
+        android:layout_alignEnd="@+id/buy" />
+    <ListView
+        android:layout_width="300dp"
+        android:layout_height="150dp"
+        android:background="#ffffff"
+        android:layout_marginBottom="81dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+    </ListView>
+
 </RelativeLayout>
