@@ -72,6 +72,7 @@
         android:layout_alignEnd="@+id/buy" />
     <ListView
         android:layout_width="300dp"
+        android:id="@+id/todaylist"
         android:layout_height="150dp"
         android:background="#ffffff"
         android:layout_marginBottom="81dp"

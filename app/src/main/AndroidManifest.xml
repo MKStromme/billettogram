@@ -30,5 +30,7 @@
             android:label="QrScanner"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
+    <!--  Internet Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
