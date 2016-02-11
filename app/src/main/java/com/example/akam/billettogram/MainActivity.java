@@ -4,20 +4,25 @@ import android.app.ActionBar;
 import android.app.LauncherActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -34,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
 
       ListView dagensaktivitet;
       TextView txt;
+        ArrayList<String> listItems = new ArrayList<String>();
+        ArrayAdapter<String> adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +50,42 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         dagensaktivitet=(ListView)findViewById(R.id.todaylist);
-        txt=(TextView)findViewById(R.id.pid);
+        //txt=(TextView)findViewById(R.id.pid);
+
+        adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,listItems){
+            public View getView(int position, View convertView, ViewGroup parent){
+                // Get the Item from ListView
+                View view = super.getView(position, convertView, parent);
+
+                // Initialize a TextView for ListView each Item
+                TextView txt = (TextView) view.findViewById(android.R.id.text1);
+
+                // Set the text color of TextView (ListView Item)
+                txt.setTextColor(Color.WHITE);
+
+                // Generate ListView Item using TextView
+                return view;
+            }
+        };
+        dagensaktivitet.setAdapter(adapter);
+
+        /*ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>
+                (this, android.R.layout.simple_list_item_1, listItems){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+                // Get the Item from ListView
+                View view = super.getView(position, convertView, parent);
+
+                // Initialize a TextView for ListView each Item
+                TextView tv = (TextView) view.findViewById(android.R.id.text1);
+
+                // Set the text color of TextView (ListView Item)
+                tv.setTextColor(Color.RED);
+
+                // Generate ListView Item using TextView
+                return view;
+            }
+        };*/
 
         getJSON task= new getJSON();
         task.execute(new String[]{"http://student.cs.hioa.no/~s198518/hovedprosjekt/admin/db_get_forestillinger.php"});
@@ -88,57 +131,63 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... urls) {
-            String s="";
-            String output="";
+            String s = "";
+            String output = "";
 
-            for (String url :urls){
-                try{
-                    URL urlen=new URL(urls[0]);
-                    HttpURLConnection conn=(HttpURLConnection)urlen.openConnection();
+            for (String url : urls) {
+                try {
+                    URL urlen = new URL(urls[0]);
+                    HttpURLConnection conn = (HttpURLConnection) urlen.openConnection();
                     conn.setRequestMethod("GET");
                     conn.setRequestProperty("Accept", "applicaRon/json");
 
-                    if	(conn.getResponseCode()	!=	200)
-                    {
-                        throw new RuntimeException("Failed:HTTP error code:"+conn.getResponseCode());
+                    if (conn.getResponseCode() != 200) {
+                        throw new RuntimeException("Failed:HTTP error code:" + conn.getResponseCode());
                     }
 
-                    BufferedReader br=	new BufferedReader(new InputStreamReader( (conn.getInputStream())));
+                    BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 
                     System.out.println("Output from Server....\n");
-                    while	((s=br.readLine())	!=	null)
-                    {
-                        output=output+s;
+                    while ((s = br.readLine()) != null) {
+                        output = output + s;
 
                     }
 
                     conn.disconnect();
-                    return	output;
-                }
-                catch(Exception e){
+                    return output;
+                } catch (Exception e) {
                     return "Error!!!";
                 }
 
             }
             return output;
         }
-        protected void	onPostExecute(String ss){
-            try {
-                JSONObject jsonObject = new JSONObject(ss);
 
-                JSONArray forestillinger = jsonObject.getJSONArray("forestillinger");
+            protected void onPostExecute(String ss){
+                try {
+                    JSONObject jsonObject = new JSONObject(ss);
 
-                for(int i=0;i<forestillinger.length();i++) {
-                    String forstedato = forestillinger.getJSONObject(i).getString("dato");
+                    String[][] arr = new String[3][3];
+                    JSONArray forestillinger = jsonObject.getJSONArray("forestillinger");
+                    for (int i = 0; i < arr.length; i++) {
+                        for (int j = 0; j < arr[0].length; j++) {
+                            arr[j][i] = forestillinger.getString(0);
+                        }
+                    }
+
+                    for (int i = 0; i < forestillinger.length(); i++) {
+                        String forstedato = forestillinger.getJSONObject(i).getString("dato");
+                        String tittel = forestillinger.getJSONObject(i).getString("tittel");
+                        Log.d("Dagens", forstedato);
+                        Log.d("Dagens", tittel);
+                        listItems.add(tittel + "\n" +forstedato);
+                    }
+                    adapter.notifyDataSetChanged();
+                    int success = jsonObject.getInt("success");
+
+                } catch (Exception e) {
                 }
-
-                int success = jsonObject.getInt("success");
-
-            }
-            catch (Exception e)
-            {
             }
         }
-    }
 
-}
+    }
