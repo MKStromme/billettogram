@@ -69,23 +69,7 @@ public class MainActivity extends AppCompatActivity {
         };
         dagensaktivitet.setAdapter(adapter);
 
-        /*ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>
-                (this, android.R.layout.simple_list_item_1, listItems){
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent){
-                // Get the Item from ListView
-                View view = super.getView(position, convertView, parent);
-
-                // Initialize a TextView for ListView each Item
-                TextView tv = (TextView) view.findViewById(android.R.id.text1);
-
-                // Set the text color of TextView (ListView Item)
-                tv.setTextColor(Color.RED);
-
-                // Generate ListView Item using TextView
-                return view;
-            }
-        };*/
+       
 
         getJSON task= new getJSON();
         task.execute(new String[]{"http://student.cs.hioa.no/~s198518/hovedprosjekt/admin/db_get_forestillinger.php"});
