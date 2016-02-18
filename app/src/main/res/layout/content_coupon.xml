@@ -43,6 +43,7 @@
         android:text="Bekreft"
         android:background="@drawable/backgroundtheme"
         android:id="@+id/accept"
+        android:onClick="acceptQr"
         android:layout_marginTop="56dp"
         android:layout_below="@+id/scan"
         android:layout_centerHorizontal="true" />

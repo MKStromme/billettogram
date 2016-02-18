@@ -37,10 +37,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-      ListView dagensaktivitet;
-      TextView txt;
-        ArrayList<String> listItems = new ArrayList<String>();
-        ArrayAdapter<String> adapter;
+    ListView dagensaktivitet;
+    TextView txt;
+    ArrayList<String> listItems = new ArrayList<String>();
+    ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +49,13 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        dagensaktivitet=(ListView)findViewById(R.id.todaylist);
+        //public static final string "";
+
+        dagensaktivitet = (ListView) findViewById(R.id.todaylist);
         //txt=(TextView)findViewById(R.id.pid);
 
-        adapter=new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,listItems){
-            public View getView(int position, View convertView, ViewGroup parent){
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems) {
+            public View getView(int position, View convertView, ViewGroup parent) {
                 // Get the Item from ListView
                 View view = super.getView(position, convertView, parent);
 
@@ -69,11 +71,44 @@ public class MainActivity extends AppCompatActivity {
         };
         dagensaktivitet.setAdapter(adapter);
 
-       
 
-        getJSON task= new getJSON();
-        task.execute(new String[]{"http://student.cs.hioa.no/~s198518/hovedprosjekt/admin/db_get_forestillinger.php"});
+        getJSON task = new getJSON();
+        task.setOnPostExecuteListener(new getJSON.OnPostExecuteListener() {
+            @Override
+            public void onPostExecute(String output) {
+
+                // todo: prosessere output
+                 try {
+            JSONObject jsonObject = new JSONObject(output);
+
+            String[][] arr = new String[3][3];
+            JSONArray forestillinger = jsonObject.getJSONArray("forestillinger");
+            for (int i = 0; i < arr.length; i++) {
+                for (int j = 0; j < arr[0].length; j++) {
+                    arr[j][i] = forestillinger.getString(0);
+                }
+            }
+
+            for (int i = 0; i < forestillinger.length(); i++) {
+                String forstedato = forestillinger.getJSONObject(i).getString("dato");
+                String tittel = forestillinger.getJSONObject(i).getString("tittel");
+                Log.d("Dagens", forstedato);
+                Log.d("Dagens", tittel);
+                listItems.add(tittel + "\n" + forstedato);
+            }
+            adapter.notifyDataSetChanged();
+            int success = jsonObject.getInt("success");
+
+        } catch (Exception e) {
+        }
+
+            }
+        });
+
+
+        task.execute(new String[]{"http://barnestasjonen.no/test/db_get_forestillinger.php"});
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -98,9 +133,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void openCoupon(View view){
-       // final Context context = this;
-        Button coupon = (Button)findViewById(R.id.koppong);
+    public void openCoupon(View view) {
+        // final Context context = this;
+        Button coupon = (Button) findViewById(R.id.koppong);
         coupon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public class getJSON extends AsyncTask<String,	Void, String> {
+   /* public class getJSON extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... urls) {
@@ -147,31 +182,32 @@ public class MainActivity extends AppCompatActivity {
             return output;
         }
 
-            protected void onPostExecute(String ss){
-                try {
-                    JSONObject jsonObject = new JSONObject(ss);
+        protected void onPostExecute(String ss) {
+            try {
+                JSONObject jsonObject = new JSONObject(ss);
 
-                    String[][] arr = new String[3][3];
-                    JSONArray forestillinger = jsonObject.getJSONArray("forestillinger");
-                    for (int i = 0; i < arr.length; i++) {
-                        for (int j = 0; j < arr[0].length; j++) {
-                            arr[j][i] = forestillinger.getString(0);
-                        }
+                String[][] arr = new String[3][3];
+                JSONArray forestillinger = jsonObject.getJSONArray("forestillinger");
+                for (int i = 0; i < arr.length; i++) {
+                    for (int j = 0; j < arr[0].length; j++) {
+                        arr[j][i] = forestillinger.getString(0);
                     }
-
-                    for (int i = 0; i < forestillinger.length(); i++) {
-                        String forstedato = forestillinger.getJSONObject(i).getString("dato");
-                        String tittel = forestillinger.getJSONObject(i).getString("tittel");
-                        Log.d("Dagens", forstedato);
-                        Log.d("Dagens", tittel);
-                        listItems.add(tittel + "\n" +forstedato);
-                    }
-                    adapter.notifyDataSetChanged();
-                    int success = jsonObject.getInt("success");
-
-                } catch (Exception e) {
                 }
+
+                for (int i = 0; i < forestillinger.length(); i++) {
+                    String forstedato = forestillinger.getJSONObject(i).getString("dato");
+                    String tittel = forestillinger.getJSONObject(i).getString("tittel");
+                    Log.d("Dagens", forstedato);
+                    Log.d("Dagens", tittel);
+                    listItems.add(tittel + "\n" + forstedato);
+                }
+                adapter.notifyDataSetChanged();
+                int success = jsonObject.getInt("success");
+
+            } catch (Exception e) {
             }
         }
+    }*/
+}
 
-    }
+
