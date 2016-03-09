@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
+     //
     public void openCoupon(View view) {
         // final Context context = this;
         Button coupon = (Button) findViewById(R.id.koppong);
