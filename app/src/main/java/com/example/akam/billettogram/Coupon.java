@@ -93,38 +93,6 @@ public class Coupon extends AppCompatActivity {
             public void onClick(View v) {
                 String kode = qrFelt.getText().toString();
                 new CreateNewProduct().execute(kode);
-                while(hk.equals("")){
-                    //Great code! 11/10, would comment again.
-                }
-
-                new AlertDialog.Builder(Coupon.this)
-                        .setTitle("OBS!!!")
-                        .setMessage(hk)
-                        .setCancelable(false)
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-
-                            hk="";
-                            }
-                        })
-                        .show();
-                //Intent slideactivity = new Intent(Coupon.this, MainActivity.class);
-                //startActivity(slideactivity);
-
-                /*JSONObject jsonObj = new JSONObject();
-                try {
-                    jsonObj.put("id", 1);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    jsonObj.put("kode", qrFelt.getText());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }*/
-// Create the POST object and add the parameters
-
-
             }
         });
     }
@@ -143,39 +111,22 @@ public class Coupon extends AppCompatActivity {
         });
     }
 
-    public void couponResult(String msg){
-        new AlertDialog.Builder(this)
+    public void couponResult(){
+        new AlertDialog.Builder(Coupon.this)
                 .setTitle("OBS!!!")
-                .setMessage(msg)
+                .setMessage(hk)
                 .setCancelable(false)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        finish();
+
+                        hk="";
                     }
                 })
                 .show();
     }
 
     class CreateNewProduct extends AsyncTask<String, String, String> {
-
-        /**
-         * Before starting background thread Show Progress Dialog
-         */
-        @Override
-       /* protected void onPreExecute() {
-            super.onPreExecute();
-            pDialog = new ProgressDialog(NewProductActivity.this);
-            pDialog.setMessage("Creating Product..");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(true);
-            pDialog.show();
-        }*/
-
-        /**
-         * Creating product
-         */
         protected String doInBackground(String... args) {
-            //String description = inputDesc.getText().toString();
 
             String msg = "";
             List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -188,8 +139,7 @@ public class Coupon extends AppCompatActivity {
             JSONObject json = jsonParser.makeHttpRequest(url_bestillCoupon,"POST", params);
 
             // check log cat fro response
-          // Log.d("Create Response", json.toString());
-
+            // Log.d("Create Response", json.toString());
             // check for success tag
             try {
                 int success= Integer.parseInt(json.getString("success"));
@@ -216,28 +166,11 @@ public class Coupon extends AppCompatActivity {
 
             return null;
         }
-
-
-
         protected void onPostExecute(String file_url) {
             // dismiss the dialog once done
             //pDialog.dismiss();
+            couponResult();
         }
 
     }
-
-    /* class showMessageAsync  extends AsyncTask<String, Void,String>{
-        AlertDialog alertDialog;
-        protected void onPreExecute(){
-            alertDialog= new AlertDialog(Coupon.this);
-        }
-        @Override
-        protected String doInBackground(String... params) {
-            return null;
-        }
-        public void couponResult(String msg){
-
-        }
-
-    }*/
 }

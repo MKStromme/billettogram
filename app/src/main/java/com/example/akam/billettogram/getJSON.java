@@ -44,7 +44,7 @@ public class getJSON extends AsyncTask<String, Void, String> {
         try {
             int success = Integer.parseInt(json.getString("success"));
             msg = json.toString();
-            System.out.println(msg);
+            //System.out.println(msg);
 
             if (success == 1) {
 
@@ -58,39 +58,8 @@ public class getJSON extends AsyncTask<String, Void, String> {
         }
         return null;
     }
-        /*String s = "";
-        String output = "";
-
-        for (String url : urls) {
-            try {
-                URL urlen = new URL(urls[0]);
-                HttpURLConnection conn = (HttpURLConnection) urlen.openConnection();
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("Accept", "applicaRon/json");
-
-                if (conn.getResponseCode() != 200) {
-                    throw new RuntimeException("Failed:HTTP error code:" + conn.getResponseCode());
-                }
-
-                BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-
-                System.out.println("Output from Server....\n");
-                while ((s = br.readLine()) != null) {
-                    output = output + s;
-                }
-
-                conn.disconnect();
-                return output;
-            } catch (Exception e) {
-                return "Error!!!";
-            }
-
-        }*/
-
     protected void onPostExecute(String ss) {
         this.onPostExecuteListener.onPostExecute(ss);
-
-
 
     }
     public JSONObject getJSon(){
