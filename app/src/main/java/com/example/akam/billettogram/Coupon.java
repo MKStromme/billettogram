@@ -2,16 +2,20 @@ package com.example.akam.billettogram;
 
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.LauncherActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -22,12 +26,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import android.text.Html;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -42,7 +48,8 @@ public class Coupon extends AppCompatActivity {
     JSONParser jsonParser = new JSONParser();
     EditText qrFelt;
     Button qraccept;
-
+    public String hk = "";
+    //int success = jsonObject.getInt("success");
     private static String url_bestillCoupon = "http://barnestasjonen.no/test/db_validate_coupon.php";
     private static final String TAG_SUCCESS = "Success";
 
@@ -86,8 +93,23 @@ public class Coupon extends AppCompatActivity {
             public void onClick(View v) {
                 String kode = qrFelt.getText().toString();
                 new CreateNewProduct().execute(kode);
-                Intent slideactivity = new Intent(Coupon.this, MainActivity.class);
-                startActivity(slideactivity);
+                while(hk.equals("")){
+                    //Great code! 11/10, would comment again.
+                }
+
+                new AlertDialog.Builder(Coupon.this)
+                        .setTitle("OBS!!!")
+                        .setMessage(hk)
+                        .setCancelable(false)
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                            hk="";
+                            }
+                        })
+                        .show();
+                //Intent slideactivity = new Intent(Coupon.this, MainActivity.class);
+                //startActivity(slideactivity);
 
                 /*JSONObject jsonObj = new JSONObject();
                 try {
@@ -121,6 +143,18 @@ public class Coupon extends AppCompatActivity {
         });
     }
 
+    public void couponResult(String msg){
+        new AlertDialog.Builder(this)
+                .setTitle("OBS!!!")
+                .setMessage(msg)
+                .setCancelable(false)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        finish();
+                    }
+                })
+                .show();
+    }
 
     class CreateNewProduct extends AsyncTask<String, String, String> {
 
@@ -143,7 +177,7 @@ public class Coupon extends AppCompatActivity {
         protected String doInBackground(String... args) {
             //String description = inputDesc.getText().toString();
 
-
+            String msg = "";
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("id", "arsho@gmail.com"));
             params.add(new BasicNameValuePair("kode", args[0]));
@@ -158,7 +192,8 @@ public class Coupon extends AppCompatActivity {
 
             // check for success tag
             try {
-                int success = json.getInt(TAG_SUCCESS);
+                int success= Integer.parseInt(json.getString("success"));
+                msg=json.getString("message");
 
                 if (success == 1) {
                     // successfully created product
@@ -167,8 +202,13 @@ public class Coupon extends AppCompatActivity {
 
                     // closing this screen
                     finish();
-                } else {
-                    // failed to create product
+                }
+                else{
+                    //dialogvindu med json message
+                    //couponResult(json.getString("message"));
+                    System.out.println(msg);
+                    msg=Html.fromHtml(msg).toString();
+                    hk = msg;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -177,10 +217,27 @@ public class Coupon extends AppCompatActivity {
             return null;
         }
 
+
+
         protected void onPostExecute(String file_url) {
             // dismiss the dialog once done
             //pDialog.dismiss();
         }
 
     }
+
+    /* class showMessageAsync  extends AsyncTask<String, Void,String>{
+        AlertDialog alertDialog;
+        protected void onPreExecute(){
+            alertDialog= new AlertDialog(Coupon.this);
+        }
+        @Override
+        protected String doInBackground(String... params) {
+            return null;
+        }
+        public void couponResult(String msg){
+
+        }
+
+    }*/
 }

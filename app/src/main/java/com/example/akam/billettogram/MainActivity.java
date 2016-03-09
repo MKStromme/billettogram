@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -21,6 +22,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +32,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
     TextView txt;
     ArrayList<String> listItems = new ArrayList<String>();
     ArrayAdapter<String> adapter;
+
+    JSONParser jsonParser = new JSONParser();
+    JSONObject hc= null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,41 +79,69 @@ public class MainActivity extends AppCompatActivity {
         dagensaktivitet.setAdapter(adapter);
 
 
+
         getJSON task = new getJSON();
         task.setOnPostExecuteListener(new getJSON.OnPostExecuteListener() {
             @Override
             public void onPostExecute(String output) {
 
                 // todo: prosessere output
-                 try {
-            JSONObject jsonObject = new JSONObject(output);
+                try {
+                    JSONObject jsonObject = new JSONObject(output);
 
-            String[][] arr = new String[3][3];
-            JSONArray forestillinger = jsonObject.getJSONArray("forestillinger");
-            for (int i = 0; i < arr.length; i++) {
-                for (int j = 0; j < arr[0].length; j++) {
-                    arr[j][i] = forestillinger.getString(0);
+                    String[][] arr = new String[3][3];
+                    JSONArray tickets = jsonObject.getJSONArray("tickets");
+                    for (int i = 0; i < 3; i++) {
+                        for (int j = 0; j < arr[0].length; j++) {
+                            arr[j][i] = tickets.getString(0);
+                        }
+                    }
+
+                    for (int i = 0; i < tickets.length(); i++) {
+                        String forstedato = tickets.getJSONObject(i).getString("dato");
+                        String tittel = tickets.getJSONObject(i).getString("tittel");
+                        Log.d("Dagens", forstedato);
+                        Log.d("Dagens", tittel);
+                        listItems.add(tittel + "\n" + forstedato);
+                    }
+                    adapter.notifyDataSetChanged();
+                    int success = jsonObject.getInt("success");
+
+                } catch (Exception e) {
                 }
-            }
-
-            for (int i = 0; i < forestillinger.length(); i++) {
-                String forstedato = forestillinger.getJSONObject(i).getString("dato");
-                String tittel = forestillinger.getJSONObject(i).getString("tittel");
-                Log.d("Dagens", forstedato);
-                Log.d("Dagens", tittel);
-                listItems.add(tittel + "\n" + forstedato);
-            }
-            adapter.notifyDataSetChanged();
-            int success = jsonObject.getInt("success");
-
-        } catch (Exception e) {
-        }
 
             }
+
         });
+        JSONObject tickets = task.getJSon();
 
+        /*for (int i = 0; i < 3; i++) {
+            String tittel = null;
+            try {
+                tittel = tickets.getJSONObject("tittel").toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.d("Dagens", tittel);
+            listItems.add(tittel + "\n");
+        }*/
+        adapter.notifyDataSetChanged();
+
+        /*JSONParser jsonParser = new JSONParser();
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("id", "arsho@gmail.com"));
+        params.add(new BasicNameValuePair("type", "android"));
+
+        // getting JSON Object
+        // Note that create product url accepts POST method
+        JSONObject json = jsonParser.makeHttpRequest("http://barnestasjonen.no/test/db_get_billetter.php","POST", params);*/
 
         task.execute(new String[]{"http://barnestasjonen.no/test/db_get_forestillinger.php"});
+    }
+
+    public void methodTest()
+    {
+        Log.d("TEST","etter postexecute");
     }
 
     @Override
@@ -149,64 +184,31 @@ public class MainActivity extends AppCompatActivity {
    /* public class getJSON extends AsyncTask<String, Void, String> {
 
         @Override
-        protected String doInBackground(String... urls) {
-            String s = "";
-            String output = "";
+        protected String doInBackground(String... args) {
+            //String description = inputDesc.getText().toString();
 
-            for (String url : urls) {
-                try {
-                    URL urlen = new URL(urls[0]);
-                    HttpURLConnection conn = (HttpURLConnection) urlen.openConnection();
-                    conn.setRequestMethod("GET");
-                    conn.setRequestProperty("Accept", "applicaRon/json");
+            String msg = "";
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("id", "arsho@gmail.com"));
+            params.add(new BasicNameValuePair("type", "android"));
 
-                    if (conn.getResponseCode() != 200) {
-                        throw new RuntimeException("Failed:HTTP error code:" + conn.getResponseCode());
-                    }
+            JSONObject json = jsonParser.makeHttpRequest("http://barnestasjonen.no/test/db_get_billetter.php", "POST", params);
 
-                    BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-
-                    System.out.println("Output from Server....\n");
-                    while ((s = br.readLine()) != null) {
-                        output = output + s;
-
-                    }
-
-                    conn.disconnect();
-                    return output;
-                } catch (Exception e) {
-                    return "Error!!!";
-                }
-
-            }
-            return output;
-        }
-
-        protected void onPostExecute(String ss) {
             try {
-                JSONObject jsonObject = new JSONObject(ss);
+                int success = Integer.parseInt(json.getString("success"));
+                msg = json.toString();
+                System.out.println(msg);
 
-                String[][] arr = new String[3][3];
-                JSONArray forestillinger = jsonObject.getJSONArray("forestillinger");
-                for (int i = 0; i < arr.length; i++) {
-                    for (int j = 0; j < arr[0].length; j++) {
-                        arr[j][i] = forestillinger.getString(0);
-                    }
+                if (success == 1) {
+
+                } else {
                 }
-
-                for (int i = 0; i < forestillinger.length(); i++) {
-                    String forstedato = forestillinger.getJSONObject(i).getString("dato");
-                    String tittel = forestillinger.getJSONObject(i).getString("tittel");
-                    Log.d("Dagens", forstedato);
-                    Log.d("Dagens", tittel);
-                    listItems.add(tittel + "\n" + forstedato);
-                }
-                adapter.notifyDataSetChanged();
-                int success = jsonObject.getInt("success");
-
-            } catch (Exception e) {
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+            return null;
         }
+
     }*/
 }
 
