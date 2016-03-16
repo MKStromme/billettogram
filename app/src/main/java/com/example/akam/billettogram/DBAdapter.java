@@ -47,16 +47,17 @@ public class DBAdapter {
         @Override
         public void onCreate(SQLiteDatabase db) {
             String sql="create table "+ TABELL+ "( "
-                    + ID+ "integer primary key autoincrement,"
-                    + DATE+ "date,"
-                    + FID + "int,"
-                    + TITTEL+"text,"
-                    + PRIS+ "int,"
-                    + BILDET+"text,"
-                    + ANTALL+"int, "
-                    + KODE+"text, "
-                    + TIME+ "date,"
-                    + SANG +"text);";
+                    + ID+ " int auto_increment,"
+                    + DATE+ " date,"
+                    + FID + " int,"
+                    + TITTEL+" text,"
+                    + PRIS+ " int,"
+                    + BILDET+" text,"
+                    + ANTALL+" int, "
+                    + KODE+" text, "
+                    + TIME+ " date,"
+                    + SANG +" text, "
+                    + "primary key("+ID+"));";
             Log.d(TAG, "oncreated sql" + sql);
             db.execSQL(sql);
         }
