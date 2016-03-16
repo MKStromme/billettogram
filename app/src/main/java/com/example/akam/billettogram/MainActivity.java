@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     JSONParser jsonParser = new JSONParser();
     JSONObject hc= null;
     JSONArray tickets;
+    DBAdapter db;
+
 
     private static final String url_orderedTickets = "http://barnestasjonen.no/test/db_get_billetter.php";
 
@@ -55,8 +57,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        db = new DBAdapter(this);
+        db.open();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
 
         dagensaktivitet = (ListView) findViewById(R.id.todaylist);
@@ -115,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
         tickets = hc.getJSONArray("tickets");
         for(int i=0; i <3 && i < tickets.length() ;i++){
-            listItems.add(tickets.getJSONObject(i).getString("kode"));
+            listItems.add(tickets.getJSONObject(i).getString("tittel"));
         }
     }
 
