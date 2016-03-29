@@ -118,10 +118,12 @@ public class MainActivity extends AppCompatActivity {
     public void methodTest() throws JSONException {
         Log.d("TEST","etter postexecute");
 
+        //if(hc != null){
         tickets = hc.getJSONArray("tickets");
-        for(int i=0; i <3 && i < tickets.length() ;i++){
+
+        for (int i = 0; i < 3 && i < tickets.length(); i++) {
             listItems.add(tickets.getJSONObject(i).getString("tittel"));
-        }
+        }//}
     }
 
     @Override
@@ -164,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
 
             List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-            params.add(new BasicNameValuePair("id", "arsho@gmail.com"));
+            params.add(new BasicNameValuePair("id", "test@gmail.com"));
             params.add(new BasicNameValuePair("type", "android"));
 
             JSONObject json = jsonParser.makeHttpRequest(url_orderedTickets,"POST", params);
@@ -172,25 +174,17 @@ public class MainActivity extends AppCompatActivity {
             try {
                 int success= Integer.parseInt(json.getString("success"));
                 String msg = json.toString();
-                System.out.println("Vi er her:"+msg);
+                System.out.println("Vi er her:"+msg+"   "+success);
 
 
 
                 if (success == 1) {
                     hc = json;
-                    // successfully created product
-                    //Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                    //startActivity(i);
-                    Log.d("TEST","i IF");
-                    // closing this screen
-                    //finish();
                 }
                 else{
-                    //dialogvindu med json message
-                    //couponResult(json.getString("message"));
-                    Log.d("TEST", "i else");
-                    //msg=Html.fromHtml(msg).toString();
-                    //hk = msg;
+
+                    //hent forestillinger som brukeren kan kjope.
+                    hc=json;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
