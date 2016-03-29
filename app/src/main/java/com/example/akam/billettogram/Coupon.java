@@ -49,6 +49,7 @@ public class Coupon extends AppCompatActivity {
     EditText qrFelt;
     Button qraccept;
     public String hk = "";
+    DBAdapter db;
     //int success = jsonObject.getInt("success");
     private static String url_bestillCoupon = "http://barnestasjonen.no/test/db_validate_coupon.php";
     private static final String TAG_SUCCESS = "Success";
@@ -146,11 +147,15 @@ public class Coupon extends AppCompatActivity {
                 msg=json.getString("message");
 
                 if (success == 1) {
+                    Log.d("test5",json.toString());
+                    db.open();
+                    db.oppdater(json.getString("date"),Integer.parseInt(json.getString("fid")),json.getString("tittel"),Integer.parseInt(json.getString("pris")),json.getString("bilde"),Integer.parseInt(json.getString("antall")),json.getString("kode"),json.getString("time"));
+
+                    db.close();
+
                     // successfully created product
                     Intent i = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(i);
-
-                    // closing this screen
                     finish();
                 }
                 else{

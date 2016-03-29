@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private static final String url_orderedTickets = "http://barnestasjonen.no/test/db_get_billetter.php";
+    private static final String url_getForestillinger= "http://barnestasjonen.no/test/db_get_frontforestillinger.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,9 +93,9 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     for (int i = 0; i < tickets.length(); i++) {
-                        String forstedato = tickets.getJSONObject(i).getString("dato");
+                        String sted = tickets.getJSONObject(i).getString("sted");
                         String tittel = tickets.getJSONObject(i).getString("tittel");
-                        Log.d("Dagens", forstedato);
+                        Log.d("Dagens", sted);
                         Log.d("Dagens", tittel);
                        // listItems.add(tittel + "\n" + forstedato);
                     }
@@ -179,10 +180,14 @@ public class MainActivity extends AppCompatActivity {
 
 
                 if (success == 1) {
+                    Log.d("test",json.toString());
                     hc = json;
                 }
                 else{
 
+                    List<NameValuePair> x = new ArrayList<NameValuePair>();
+                    json = jsonParser.makeHttpRequest(url_getForestillinger,"GET",x);
+                    Log.d("test",json.toString());
                     //hent forestillinger som brukeren kan kjope.
                     hc=json;
                 }

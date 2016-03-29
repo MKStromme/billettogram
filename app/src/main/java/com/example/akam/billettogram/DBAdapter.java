@@ -14,7 +14,7 @@ import java.util.Date;
 public class DBAdapter {
     Context context;
     static final String TAG = "DbHelper";
-    static final String DB_NAVN = "billetter.db";
+    static final String DB_NAVN = "billett.db";
     static final String TABELL = "billetter";
     static final String ID = BaseColumns._ID;
     static final String DATE = "dato";
@@ -83,7 +83,7 @@ public class DBAdapter {
     {
         db.insert(TABELL,null,cv);
     }
-    public boolean oppdater(String id, String date, int fid, String tittel, int pris, String bildet, int antall, String kode, String tid, String sang) {
+    public boolean oppdater(String date, int fid, String tittel, int pris, String bildet, int antall, String kode, String tid) {
         ContentValues cv = new ContentValues(9);
 
         cv.put(DATE, date);
@@ -94,9 +94,8 @@ public class DBAdapter {
         cv.put(ANTALL,antall);
         cv.put(KODE, kode);
         cv.put(TIME,tid);
-        cv.put(SANG,sang);
         //return db.update(TABELL, cv, FORNAVN + " equals '" + fornavn + "'", null) >0;
-        return db.update(TABELL,cv,ID + "='" + id + "'",null) > 0;
+        return db.update(TABELL,cv,FID + "='" + fid + "'",null) > 0;
     }
     public Cursor finnPersonMId(int id)
     {
@@ -110,6 +109,5 @@ public class DBAdapter {
         Log.d("DATA", "!!!!!!!!!-------" + id);
         return cur;
     }
-
 
 }
