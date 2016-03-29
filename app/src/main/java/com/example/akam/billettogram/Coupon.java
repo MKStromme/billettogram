@@ -61,6 +61,8 @@ public class Coupon extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //db = new DBAdapter(this);
+        //db.open();
 
     }
 
@@ -145,13 +147,11 @@ public class Coupon extends AppCompatActivity {
             try {
                 int success= Integer.parseInt(json.getString("success"));
                 msg=json.getString("message");
-
                 if (success == 1) {
                     Log.d("test5",json.toString());
-                    db.open();
-                    db.oppdater(json.getString("date"),Integer.parseInt(json.getString("fid")),json.getString("tittel"),Integer.parseInt(json.getString("pris")),json.getString("bilde"),Integer.parseInt(json.getString("antall")),json.getString("kode"),json.getString("time"));
+                    //db.oppdater(json.getString("date"), Integer.parseInt(json.getString("fid")), json.getString("tittel"), Integer.parseInt(json.getString("pris")), json.getString("bilde"), Integer.parseInt(json.getString("antall")), json.getString("kode"),json.getString("time"));
 
-                    db.close();
+                    //db.close();
 
                     // successfully created product
                     Intent i = new Intent(getApplicationContext(), MainActivity.class);
