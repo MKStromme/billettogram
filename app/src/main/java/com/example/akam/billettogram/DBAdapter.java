@@ -79,11 +79,13 @@ public class DBAdapter {
     public void close()
     {
     }
+
     public void insert(ContentValues cv)
     {
-        db.insert(TABELL,null,cv);
+        Log.d("test","legger inn: "+db.insert(TABELL, null, cv));
     }
-    public boolean oppdater(String date, int fid, String tittel, int pris, String bildet, int antall, String kode, String tid) {
+
+    /*public boolean oppdater(String date, int fid, String tittel, int pris, String bildet, int antall, String kode, String tid) {
         ContentValues cv = new ContentValues(9);
 
         cv.put(DATE, date);
@@ -96,6 +98,14 @@ public class DBAdapter {
         cv.put(TIME,tid);
         //return db.update(TABELL, cv, FORNAVN + " equals '" + fornavn + "'", null) >0;
         return db.update(TABELL,cv,FID + "='" + fid + "'",null) > 0;
+    }*/
+
+    public Cursor treSisteForestilling()
+    {
+        String[] cols = {TITTEL};
+
+        Cursor cur = db.query(TABELL,cols,ID+"=="+0,null,null,null,ID);
+        return cur;
     }
     public Cursor finnPersonMId(int id)
     {

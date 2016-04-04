@@ -4,6 +4,7 @@ package com.example.akam.billettogram;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.LauncherActivity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -61,7 +62,7 @@ public class Coupon extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //db = new DBAdapter(this);
+        db = new DBAdapter(this);
         //db.open();
 
     }
@@ -133,7 +134,7 @@ public class Coupon extends AppCompatActivity {
 
             String msg = "";
             List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("id", "test@gmail.com"));
+            params.add(new BasicNameValuePair("id", "slettDisse@gmail.com"));
             params.add(new BasicNameValuePair("kode", args[0]));
             params.add(new BasicNameValuePair("type", "android"));
 
@@ -148,10 +149,26 @@ public class Coupon extends AppCompatActivity {
                 int success= Integer.parseInt(json.getString("success"));
                 msg=json.getString("message");
                 if (success == 1) {
-                    Log.d("test5",json.toString());
-                    //db.oppdater(json.getString("date"), Integer.parseInt(json.getString("fid")), json.getString("tittel"), Integer.parseInt(json.getString("pris")), json.getString("bilde"), Integer.parseInt(json.getString("antall")), json.getString("kode"),json.getString("time"));
+                    Log.d("test5", json.toString());
 
-                    //db.close();
+                    db.open();
+                    //db.oppdater(json.getString("date"), Integer.parseInt(json.getString("fid")), json.getString("tittel"),
+                    // Integer.parseInt(json.getString("pris")), json.getString("bilde"),
+                    // Integer.parseInt(json.getString("antall")),
+                    // json.getString("kode"), json.getString("time"));
+                    ContentValues cv = new ContentValues();
+
+                    cv.put(db.DATE,json.getString("date"));
+                    cv.put(db.FID,Integer.parseInt(json.getString("fid")));
+                    cv.put(db.TITTEL,json.getString("tittel"));
+                    cv.put(db.PRIS,Integer.parseInt(json.getString("pris")));
+                    cv.put(db.BILDET,json.getString("bilde"));
+                    cv.put(db.ANTALL,Integer.parseInt(json.getString("antall")));
+                    cv.put(db.KODE,json.getString("time"));
+
+                    db.insert(cv);
+
+                    db.close();
 
                     // successfully created product
                     Intent i = new Intent(getApplicationContext(), MainActivity.class);

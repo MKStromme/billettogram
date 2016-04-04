@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.LauncherActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -63,7 +64,10 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Cursor cursor = db.treSisteForestilling();
+        //burde bare vaere aa skrive ut her...
 
+        //Log.d("test",cursor.getString(0));
 
         dagensaktivitet = (ListView) findViewById(R.id.todaylist);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems) {
@@ -167,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
 
             List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-            params.add(new BasicNameValuePair("id", "test@gmail.com"));
+            params.add(new BasicNameValuePair("id", "test12345@gmail.com"));
             params.add(new BasicNameValuePair("type", "android"));
 
             JSONObject json = jsonParser.makeHttpRequest(url_orderedTickets,"POST", params);
@@ -185,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else{
 
-                    List<NameValuePair> x = new ArrayList<NameValuePair>();
+                    List<NameValuePair> x = new ArrayList<>();
                     json = jsonParser.makeHttpRequest(url_getForestillinger,"GET",x);
                     Log.d("test",json.toString());
                     //hent forestillinger som brukeren kan kjope.
