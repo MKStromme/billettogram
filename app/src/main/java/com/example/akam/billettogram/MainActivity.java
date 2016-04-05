@@ -59,15 +59,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        db = new DBAdapter(this);
-        db.open();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        Cursor cursor = db.treSisteForestilling();
-        //burde bare vaere aa skrive ut her...
-
-        //Log.d("test",cursor.getString(0));
 
         dagensaktivitet = (ListView) findViewById(R.id.todaylist);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems) {
@@ -79,56 +73,40 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         dagensaktivitet.setAdapter(adapter);
-        getJSON task = new getJSON();
-        task.setOnPostExecuteListener(new getJSON.OnPostExecuteListener() {
-            @Override
-            public void onPostExecute(String output) {
 
-                // todo: prosessere output
-                try {
-                    JSONObject jsonObject = new JSONObject(output);
-
-                    String[][] arr = new String[3][3];
-                    tickets = hc.getJSONArray("tickets");
-                    for (int i = 0; i < 3; i++) {
-                        for (int j = 0; j < arr[0].length; j++) {
-                            arr[j][i] = tickets.getString(0);
-                        }
-                    }
-
-                    for (int i = 0; i < tickets.length(); i++) {
-                        String sted = tickets.getJSONObject(i).getString("sted");
-                        String tittel = tickets.getJSONObject(i).getString("tittel");
-                        Log.d("Dagens", sted);
-                        Log.d("Dagens", tittel);
-                       // listItems.add(tittel + "\n" + forstedato);
-                    }
-                    adapter.notifyDataSetChanged();
-                    int success = jsonObject.getInt("success");
-
-                } catch (Exception e) {
-                }
-
-            }
-
-        });
-
-        new getShows().execute();
+        if(!fromLocalDB())
+            new getShows().execute();
 
         //JSONObject tickets = task.getJSon();
         adapter.notifyDataSetChanged();
-        task.execute(new String[]{"http://barnestasjonen.no/test/db_get_forestillinger.php"});
+        //task.execute(new String[]{"http://barnestasjonen.no/test/db_get_forestillinger.php"});
     }
 
-    public void methodTest() throws JSONException {
-        Log.d("TEST","etter postexecute");
-
-        //if(hc != null){
+    public void fromExtDB() throws JSONException
+    {
         tickets = hc.getJSONArray("tickets");
 
         for (int i = 0; i < 3 && i < tickets.length(); i++) {
             listItems.add(tickets.getJSONObject(i).getString("tittel"));
-        }//}
+        }
+    }
+
+    private boolean fromLocalDB()
+    {
+
+        db = new DBAdapter(this);
+        db.open();
+
+        Cursor cur = db.treSisteForestilling();
+        if(cur.moveToFirst())
+        {
+            do{
+                listItems.add(cur.getInt(cur.getColumnIndex(db.ID)),cur.getString(cur.getColumnIndex(db.TITTEL)));
+            }while(cur.moveToNext());
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -167,8 +145,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... args) {
 
-            Log.d("TEST", "do in background");
-
             List<NameValuePair> params = new ArrayList<NameValuePair>();
 
             params.add(new BasicNameValuePair("id", "test12345@gmail.com"));
@@ -183,18 +159,15 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-                if (success == 1) {
-                    Log.d("test",json.toString());
-                    hc = json;
-                }
-                else{
+                if (success == 1) {hc = json;}
 
+                else{
                     List<NameValuePair> x = new ArrayList<>();
                     json = jsonParser.makeHttpRequest(url_getForestillinger,"GET",x);
-                    Log.d("test",json.toString());
                     //hent forestillinger som brukeren kan kjope.
                     hc=json;
                 }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -206,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
         {
             //run code
             try {
-                methodTest();
+                fromExtDB();
             } catch (JSONException e) {
                 e.printStackTrace();
             }

@@ -85,26 +85,11 @@ public class DBAdapter {
         Log.d("test","legger inn: "+db.insert(TABELL, null, cv));
     }
 
-    /*public boolean oppdater(String date, int fid, String tittel, int pris, String bildet, int antall, String kode, String tid) {
-        ContentValues cv = new ContentValues(9);
-
-        cv.put(DATE, date);
-        cv.put(FID, fid);
-        cv.put(TITTEL, tittel);
-        cv.put(PRIS, pris);
-        cv.put(BILDET, bildet);
-        cv.put(ANTALL,antall);
-        cv.put(KODE, kode);
-        cv.put(TIME,tid);
-        //return db.update(TABELL, cv, FORNAVN + " equals '" + fornavn + "'", null) >0;
-        return db.update(TABELL,cv,FID + "='" + fid + "'",null) > 0;
-    }*/
-
     public Cursor treSisteForestilling()
     {
-        String[] cols = {TITTEL};
+        String[] cols = {ID,TITTEL,DATE};
 
-        Cursor cur = db.query(TABELL,cols,ID+"=="+0,null,null,null,ID);
+        Cursor cur = db.query(TABELL,cols,null,null,null,null,ID);
         return cur;
     }
     public Cursor finnPersonMId(int id)
