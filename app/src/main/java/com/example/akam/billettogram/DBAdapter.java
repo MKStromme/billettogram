@@ -27,6 +27,8 @@ public class DBAdapter {
     static final String TIME = "time";
     static final String SANG = "sang";
 
+    static final int ANTALLPAFORSIDEN = 3;
+
     static final int DB_VERSJON = 1;
     private DatabaseHelper DBHelper;
     private SQLiteDatabase db;
@@ -89,12 +91,22 @@ public class DBAdapter {
     {
         String[] cols = {ID,TITTEL,DATE};
 
+        Cursor cur = db.query(TABELL,cols,null,null,null,null,DATE + " DESC","" + ANTALLPAFORSIDEN);
+        return cur;
+    }
+
+    public Cursor visAlle()
+    {
+        String[] cols = {ID,TITTEL,DATE};
+
         Cursor cur = db.query(TABELL,cols,null,null,null,null,ID);
         return cur;
     }
+
+
+
     public Cursor finnPersonMId(int id)
     {
-
         String[] cols = {ID,DATE,FID,TITTEL,PRIS,BILDET,ANTALL,KODE,TIME,SANG};
         //String sql = "SELECT * FROM " + TABELL + " WHERE " + ID + " = " + id;
         Log.d("ID", "!!!!!!!!!-------" + id);

@@ -4,4 +4,5 @@
     <string name="title_activity_coupon">Coupon</string>
     <string name="title_activity_qr_code_scanner">QrCodeScanner</string>
     <string name="title_activity_barcode_scanner">BarcodeScanner</string>
+    <string name="title_activity_mine_billetter">MineBilletter</string>
 </resources>

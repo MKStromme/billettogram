@@ -69,7 +69,8 @@
         android:background="@drawable/backgroundtheme"
         android:layout_below="@+id/logo"
         android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/buy" />
+        android:layout_alignEnd="@+id/buy"
+        android:onClick="openMineBilletter"/>
     <ListView
         android:layout_width="300dp"
         android:id="@+id/todaylist"

@@ -80,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
         //JSONObject tickets = task.getJSon();
         adapter.notifyDataSetChanged();
         //task.execute(new String[]{"http://barnestasjonen.no/test/db_get_forestillinger.php"});
+
+
+
     }
 
     public void fromExtDB() throws JSONException
@@ -138,12 +141,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    public void openMineBilletter(View view) {
+        // final Context context = this;
+        Button mnbl = (Button) findViewById(R.id.show);
+        mnbl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent slideactivity = new Intent(MainActivity.this, MineBilletter.class);
+                startActivity(slideactivity);
+            }
+        });
+    }
 
     class getShows extends AsyncTask<String,String,String>
     {
 
         @Override
         protected String doInBackground(String... args) {
+            Log.d("TEST","jeg er her");
 
             List<NameValuePair> params = new ArrayList<NameValuePair>();
 
