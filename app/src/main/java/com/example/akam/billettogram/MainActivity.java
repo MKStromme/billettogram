@@ -186,6 +186,9 @@ public class MainActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            catch(NullPointerException e){
+                System.out.println(e.toString());
+            }
 
             return null;
         }
