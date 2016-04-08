@@ -1,5 +1,7 @@
 package com.example.akam.billettogram;
 
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -39,6 +42,9 @@ public class MineBilletter extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //Gjort nå
+        db = new DBAdapter(this);
+        db.open();
 
 
 
@@ -56,7 +62,6 @@ public class MineBilletter extends AppCompatActivity {
         fromLocalDB();
         //JSONObject tickets = task.getJSon();
         adapter.notifyDataSetChanged();
-
     }
 
     public void fromExtDB() throws JSONException

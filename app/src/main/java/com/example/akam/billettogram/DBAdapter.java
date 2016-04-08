@@ -14,7 +14,7 @@ import java.util.Date;
 public class DBAdapter {
     Context context;
     static final String TAG = "DbHelper";
-    static final String DB_NAVN = "billett.db";
+    static final String DB_NAVN = "billettogrammobilapplikasjon.db";
     static final String TABELL = "billetter";
     static final String ID = BaseColumns._ID;
     static final String DATE = "dato";
@@ -55,10 +55,10 @@ public class DBAdapter {
                     + TITTEL+" text,"
                     + PRIS+ " int,"
                     + BILDET+" text,"
-                    + ANTALL+" int, "
-                    + KODE+" text, "
+                    + ANTALL+" int,"
+                    + KODE+" text,"
                     + TIME+ " date,"
-                    + SANG +" text, "
+                    + SANG +" text,"
                     + "primary key("+ID+"));";
             Log.d(TAG, "oncreated sql" + sql);
             db.execSQL(sql);

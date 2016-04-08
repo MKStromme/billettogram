@@ -40,6 +40,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.akam.billettogram.MainActivity" />
         </activity>
+        <activity
+            android:name=".Billett"
+            android:label="@string/title_activity_billett"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.akam.billettogram.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

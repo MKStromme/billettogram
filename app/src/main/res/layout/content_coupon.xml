@@ -22,10 +22,22 @@
         android:id="@+id/qrcode"
         android:layout_alignParentTop="true"
         android:layout_marginTop="53dp"
-        android:layout_alignStart="@+id/scan"
-        android:layout_alignEnd="@+id/scan" />
+        android:layout_alignStart="@+id/accept"
+        android:layout_alignEnd="@+id/accept" />
 
 
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/antplass"
+        android:entries="@array/ledigeplasser"
+        android:background="#ffffff"
+        android:layout_marginTop="63dp"
+        android:layout_below="@+id/qrcode"
+        android:layout_alignEnd="@+id/qrcode"
+        android:layout_toEndOf="@+id/antalltext">
+    </Spinner>
+    <!--
     <Button
         android:layout_width="200dp"
         android:layout_height="80dp"
@@ -35,7 +47,7 @@
         android:layout_marginTop="63dp"
         android:layout_below="@+id/qrcode"
         android:layout_alignStart="@+id/accept"
-        android:onClick="openCamera"/>
+        android:onClick="openCamera"/>-->
 
     <Button
         android:layout_width="200dp"
@@ -44,7 +56,25 @@
         android:background="@drawable/backgroundtheme"
         android:id="@+id/accept"
         android:onClick="acceptQr"
-        android:layout_marginTop="56dp"
-        android:layout_below="@+id/scan"
+        android:layout_alignTop="@+id/stackView"
         android:layout_centerHorizontal="true" />
+
+    <StackView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/stackView"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="143dp" />
+
+    <TextView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Antall:"
+        android:id="@+id/antalltext"
+        android:textColor="#ffffff"
+        android:layout_alignTop="@+id/antplass"
+        android:layout_alignBottom="@+id/antplass"
+        android:layout_alignStart="@+id/qrcode" />
 </RelativeLayout>

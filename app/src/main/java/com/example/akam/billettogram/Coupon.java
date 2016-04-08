@@ -26,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +50,7 @@ public class Coupon extends AppCompatActivity {
     JSONParser jsonParser = new JSONParser();
     EditText qrFelt;
     Button qraccept;
+    Spinner ant;
     public String hk = "";
     DBAdapter db;
     //int success = jsonObject.getInt("success");
@@ -91,12 +93,16 @@ public class Coupon extends AppCompatActivity {
     public void acceptQr(View view) {
         final Context context = this;
         qrFelt = (EditText) findViewById(R.id.qrcode);
+        ant =(Spinner)findViewById(R.id.antplass);
         qraccept =(Button)findViewById(R.id.accept);
         qraccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String kode = qrFelt.getText().toString();
-                new CreateNewProduct().execute(kode);
+                String antpl = ant.getSelectedItem().toString();
+                new CreateNewProduct().execute(kode,antpl);
+
+
             }
         });
     }
@@ -104,15 +110,15 @@ public class Coupon extends AppCompatActivity {
     public void openCamera(View view) {
         final Context context = this;
 
-        Button scannerButton = (Button) findViewById(R.id.scan);
+        /*Button scannerButton = (Button) findViewById();
         scannerButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            //public void onClick(View v) {
 
                 Intent intent = new Intent(v.getContext(), BarcodeScanner.class);
                 startActivity(intent);
             }
-        });
+        });*/
     }
 
     public void couponResult(){
@@ -134,14 +140,14 @@ public class Coupon extends AppCompatActivity {
 
             String msg = "";
             List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("id", "slettDisse@gmail.com"));
-            params.add(new BasicNameValuePair("kode", args[0]));
+            params.add(new BasicNameValuePair("id", "magnusmuluag@gmail.com"));
+            params.add(new BasicNameValuePair("kode", args[0].toString()));
             params.add(new BasicNameValuePair("type", "android"));
+            params.add(new BasicNameValuePair("antall", args[1].toString()));
 
             // getting JSON Object
             // Note that create product url accepts POST method
             JSONObject json = jsonParser.makeHttpRequest(url_bestillCoupon,"POST", params);
-
             // check log cat fro response
             // Log.d("Create Response", json.toString());
             // check for success tag
@@ -159,8 +165,10 @@ public class Coupon extends AppCompatActivity {
                     cv.put(db.TITTEL,json.getString("tittel"));
                     cv.put(db.PRIS,Integer.parseInt(json.getString("pris")));
                     cv.put(db.BILDET,json.getString("bilde"));
+                    cv.put(db.KODE,json.getString("kode"));
                     cv.put(db.ANTALL,Integer.parseInt(json.getString("antall")));
-                    cv.put(db.KODE,json.getString("time"));
+                    cv.put(db.TIME,json.getString("time"));
+
 
                     db.insert(cv);
 

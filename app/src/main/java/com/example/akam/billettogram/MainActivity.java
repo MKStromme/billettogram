@@ -2,6 +2,7 @@ package com.example.akam.billettogram;
 
 import android.app.ActionBar;
 import android.app.LauncherActivity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -36,6 +37,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -50,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     JSONObject hc= null;
     JSONArray tickets;
     DBAdapter db;
+    int success;
+    String msg;
 
 
     private static final String url_orderedTickets = "http://barnestasjonen.no/test/db_get_billetter.php";
@@ -87,11 +91,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void fromExtDB() throws JSONException
     {
-        tickets = hc.getJSONArray("tickets");
 
-        for (int i = 0; i < 3 && i < tickets.length(); i++) {
-            listItems.add(tickets.getJSONObject(i).getString("tittel"));
-        }
+            tickets = hc.getJSONArray("tickets");
+            for (int i = 0; i < 3 && i < tickets.length(); i++) {
+                listItems.add(tickets.getJSONObject(i).getString("tittel"));
+            }
     }
 
     private boolean fromLocalDB()
@@ -162,32 +166,62 @@ public class MainActivity extends AppCompatActivity {
 
             List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-            params.add(new BasicNameValuePair("id", "test12345@gmail.com"));
+            params.add(new BasicNameValuePair("id", "adam@gmail.com"));
             params.add(new BasicNameValuePair("type", "android"));
 
             JSONObject json = jsonParser.makeHttpRequest(url_orderedTickets,"POST", params);
 
             try {
-                int success= Integer.parseInt(json.getString("success"));
-                String msg = json.toString();
-                System.out.println("Vi er her:"+msg+"   "+success);
+                if(json != null) {
+                    success = Integer.parseInt(json.getString("success"));
+                    msg = json.toString();
+                    System.out.println("Vi er her:" + msg + "   " + success);
+
+                }
 
 
 
-                if (success == 1) {hc = json;}
+                if (success == 1) {
+                    hc = json;
 
+                    System.out.println(json.toString());
+                    db.open();
+                    JSONArray keys = new JSONArray(json.get("tickets").toString());
+                    System.out.println("før while");
+                    for(int i=0; i <keys.length(); i++){
+                        JSONObject tempjson =keys.getJSONObject(i);
+
+                            System.out.println("inne i if");
+                            ContentValues cv = new ContentValues();
+                            cv.put(db.DATE,tempjson.getString("date"));
+                            cv.put(db.FID,Integer.parseInt(tempjson.getString("fid")));
+                            cv.put(db.TITTEL,tempjson.getString("tittel"));
+                            cv.put(db.PRIS,Integer.parseInt(tempjson.getString("pris")));
+                            cv.put(db.BILDET,tempjson.getString("bilde"));
+                            cv.put(db.KODE,tempjson.getString("kode"));
+                            cv.put(db.ANTALL,Integer.parseInt(tempjson.getString("antall")));
+                            cv.put(db.TIME,tempjson.getString("time"));
+                            db.insert(cv);
+
+                        System.out.println("etter if");
+                    }
+                    System.out.println("etter while");
+
+
+
+                    db.close();
+
+
+                }
                 else{
                     List<NameValuePair> x = new ArrayList<>();
-                    json = jsonParser.makeHttpRequest(url_getForestillinger,"GET",x);
+                    json = jsonParser.makeHttpRequest(url_getForestillinger,"POST",x);
                     //hent forestillinger som brukeren kan kjope.
                     hc=json;
                 }
 
             } catch (JSONException e) {
                 e.printStackTrace();
-            }
-            catch(NullPointerException e){
-                System.out.println(e.toString());
             }
 
             return null;
