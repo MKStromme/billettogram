@@ -1,5 +1,7 @@
 package com.example.akam.billettogram;
 
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,10 +11,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class Billett extends AppCompatActivity {
 
     DBAdapter db;
+    int id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +30,25 @@ public class Billett extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         Log.d("TAG:", "" + extras.getInt("TryThis"));
+
+        Intent intent = getIntent();
+        id = extras.getInt("TryThis");
+        //id++;
+
+        TextView tit = (TextView)findViewById(R.id.tittel);
+        TextView dato = (TextView)findViewById(R.id.dato);
+        TextView varig = (TextView) findViewById(R.id.varighet);
+        TextView antall=(TextView)findViewById(R.id.ant);
+        Cursor cr = db.finnPersonMId(id);
+
+        tit.setText("Tittel:    "+cr.getString(cr.getColumnIndex(db.TITTEL)));
+        dato.setText("Dato:     "+cr.getString(cr.getColumnIndex(db.DATE)));
+        varig.setText("Kjøpsdato:   "+cr.getString(cr.getColumnIndex(db.TIME)));
+        antall.setText("Antall billetter:    "+cr.getString(cr.getColumnIndex(db.ANTALL)));
+
+
+
+
 
 
 
