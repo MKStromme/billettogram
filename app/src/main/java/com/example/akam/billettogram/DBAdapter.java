@@ -14,7 +14,7 @@ import java.util.Date;
 public class DBAdapter {
     Context context;
     static final String TAG = "DbHelper";
-    static final String DB_NAVN = "billettogrammobilapplikasjon.db";
+    static final String DB_NAVN = "prosjektt.db";
     static final String TABELL = "billetter";
     static final String ID = BaseColumns._ID;
     static final String DATE = "dato";
@@ -49,7 +49,7 @@ public class DBAdapter {
         @Override
         public void onCreate(SQLiteDatabase db) {
             String sql="create table "+ TABELL+ "( "
-                    + ID+ " int auto_increment,"
+                    + ID+ " integer primary key autoincrement,"
                     + DATE+ " date,"
                     + FID + " int,"
                     + TITTEL+" text,"
@@ -58,8 +58,7 @@ public class DBAdapter {
                     + ANTALL+" int,"
                     + KODE+" text,"
                     + TIME+ " date,"
-                    + SANG +" text,"
-                    + "primary key("+ID+"));";
+                    + SANG +" text);";
             Log.d(TAG, "oncreated sql" + sql);
             db.execSQL(sql);
         }
@@ -82,10 +81,7 @@ public class DBAdapter {
     {
     }
 
-    public void insert(ContentValues cv)
-    {
-        Log.d("test","legger inn: "+db.insert(TABELL, null, cv));
-    }
+    public void insert(ContentValues cv) {db.insert(TABELL, null, cv);}
 
     public Cursor treSisteForestilling()
     {
@@ -102,7 +98,6 @@ public class DBAdapter {
         Cursor cur = db.query(TABELL,cols,null,null,null,null,ID);
         return cur;
     }
-
 
 
     public Cursor finnPersonMId(int id)
