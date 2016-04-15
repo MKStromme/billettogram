@@ -29,7 +29,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".BarcodeScanner"
-            android:label="QrScanner"
+            android:label=""
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MineBilletter"
@@ -42,7 +42,25 @@
         </activity>
         <activity
             android:name=".Billett"
-            android:label="@string/title_activity_billett"
+            android:label=""
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.akam.billettogram.MainActivity" />
+        </activity>
+        <activity
+            android:name=".Forestillinger"
+            android:label=""
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.akam.billettogram.MainActivity" />
+        </activity>
+        <activity
+            android:name=".Forestilling"
+            android:label="@string/title_activity_forestilling"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

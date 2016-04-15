@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +24,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class MineBilletter extends AppCompatActivity {
 
@@ -33,6 +36,8 @@ public class MineBilletter extends AppCompatActivity {
     DBAdapter db;
     JSONObject hc= null;
     JSONArray tickets;
+    final Context c = this;
+    StableArrayAdapter adb;
 
 
     @Override
@@ -62,6 +67,16 @@ public class MineBilletter extends AppCompatActivity {
         fromLocalDB();
         //JSONObject tickets = task.getJSon();
         adapter.notifyDataSetChanged();
+
+        dagensaktivitet.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("TAG2", "vi er in buttonclick");
+                Intent intent = new Intent(c, Billett.class);
+                intent.putExtra("TryThis", adb.getActualId(position));
+                startActivity(intent);
+            }
+        });
     }
 
     public void fromExtDB() throws JSONException
@@ -76,19 +91,31 @@ public class MineBilletter extends AppCompatActivity {
     private boolean fromLocalDB()
     {
 
+        Log.d("TAG:","Vi er i localDB");
         db = new DBAdapter(this);
         db.open();
+
+        final ArrayList<String> list = new ArrayList<String>();
+        final ArrayList<Integer> listId = new ArrayList<>();
 
         Cursor cur = db.visAlle();
         if(cur.moveToFirst())
         {
             do{
-                listItems.add(cur.getInt(cur.getColumnIndex(db.ID)),cur.getString(cur.getColumnIndex(db.TITTEL)));
+                list.add(cur.getString(cur.getColumnIndex(db.TITTEL)));
+                listId.add(cur.getInt(cur.getColumnIndex(db.ID)));
+                Log.d("tests", ""+cur.getColumnIndex(db.TITTEL));
+                Log.d("tests", "test 2 " + cur.getString(cur.getColumnIndex(db.TITTEL)));
+                listItems.add(cur.getString(cur.getColumnIndex(db.TITTEL)));
             }while(cur.moveToNext());
+            adb = new StableArrayAdapter(this, android.R.layout.simple_list_item_1, list, listId);
+            dagensaktivitet.setAdapter(adapter);
             return true;
         }
-
+        cur.close();
+        //tl.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {});
         return false;
+
     }
 
     @Override
@@ -107,6 +134,28 @@ public class MineBilletter extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class StableArrayAdapter extends ArrayAdapter<String> {
+        HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
+        List<Integer> trialId;
+
+        public StableArrayAdapter(Context context, int textViewResourceId, List<String> objects, List<Integer> objectId) {
+            super(context, textViewResourceId, objects);
+            for (int i = 0; i < objects.size(); i++)
+                mIdMap.put(objects.get(i), i);
+            trialId = objectId;
+        }
+
+        public long getItemId(int position) {
+            String item = getItem(position);
+            return mIdMap.get(item);
+        }
+
+        public int getActualId(int position)
+        {
+            return trialId.get(position);
+        }
     }
 
 }

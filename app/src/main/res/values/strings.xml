@@ -19,4 +19,6 @@
         <item>10</item>
     </string-array>
     <string name="title_activity_billett">Billett</string>
+    <string name="title_activity_forestillinger">Forestillinger</string>
+    <string name="title_activity_forestilling">Forestilling</string>
 </resources>

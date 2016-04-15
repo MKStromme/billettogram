@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -54,7 +55,8 @@ public class MainActivity extends AppCompatActivity {
     DBAdapter db;
     int success;
     String msg;
-
+    final Context c = this;
+    StableArrayAdapter adb;
 
     private static final String url_orderedTickets = "http://barnestasjonen.no/test/db_get_billetter.php";
     private static final String url_getForestillinger= "http://barnestasjonen.no/test/db_get_frontforestillinger.php";
@@ -68,8 +70,9 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         dagensaktivitet = (ListView) findViewById(R.id.todaylist);
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems) {
+       adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems) {
             public View getView(int position, View convertView, ViewGroup parent) {
+                Log.d("dritt","drittttt");
                 View view = super.getView(position, convertView, parent);
                 TextView txt = (TextView) view.findViewById(android.R.id.text1);
                 txt.setTextColor(Color.WHITE);
@@ -86,6 +89,39 @@ public class MainActivity extends AppCompatActivity {
         //task.execute(new String[]{"http://barnestasjonen.no/test/db_get_forestillinger.php"});
 
 
+        //final ArrayList<String> list = new ArrayList<String>();
+        //final ArrayList<Integer> listId = new ArrayList<>();
+
+        /*if (cur.moveToFirst()) {
+            do {
+                list.add(cur.getString(0));
+                listId.add(cur.getInt(cur.getColumnIndex(db.ID)));
+            } while (cur.moveToNext());
+        }
+        cur.close();
+
+        final StableArrayAdapter adapter = new StableArrayAdapter(this, android.R.layout.simple_list_item_1, list, listId);
+        dagensaktivitet.setAdapter(adapter);*/
+        /*final Context c = this;
+
+        dagensaktivitet.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(c, Billett.class);
+                intent.putExtra("TryThis", adapter.getActualId(position));
+                startActivity(intent);
+            }
+        });*/
+        dagensaktivitet.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("TAG2","vi er in buttonclick");
+                Intent intent = new Intent(c,Billett.class);
+                intent.putExtra("TryThis", adb.getActualId(position));
+                startActivity(intent);
+            }
+        });
+
 
     }
 
@@ -100,20 +136,31 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean fromLocalDB()
     {
-
+        Log.d("TAG:","Vi er i localDB");
         db = new DBAdapter(this);
         db.open();
+
+        final ArrayList<String> list = new ArrayList<String>();
+        final ArrayList<Integer> listId = new ArrayList<>();
 
         Cursor cur = db.treSisteForestilling();
         if(cur.moveToFirst())
         {
             do{
-                listItems.add(cur.getInt(cur.getColumnIndex(db.ID)),cur.getString(cur.getColumnIndex(db.TITTEL)));
+                list.add(cur.getString(cur.getColumnIndex(db.TITTEL)));
+                listId.add(cur.getInt(cur.getColumnIndex(db.ID)));
+                Log.d("tests", ""+cur.getColumnIndex(db.TITTEL));
+                Log.d("tests", "test 2 " + cur.getString(cur.getColumnIndex(db.TITTEL)));
+                listItems.add(cur.getString(cur.getColumnIndex(db.TITTEL)));
             }while(cur.moveToNext());
+            adb = new StableArrayAdapter(this, android.R.layout.simple_list_item_1, list, listId);
+            dagensaktivitet.setAdapter(adapter);
             return true;
         }
-
+        cur.close();
+        //tl.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {});
         return false;
+
     }
 
     @Override
@@ -155,6 +202,34 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(slideactivity);
             }
         });
+    }
+
+    public void buyForestilling(View view) {
+        // final Context context = this;
+        Intent intent = new Intent(MainActivity.this, Forestillinger.class);
+        startActivity(intent);
+    }
+
+    private class StableArrayAdapter extends ArrayAdapter<String> {
+        HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
+        List<Integer> trialId;
+
+        public StableArrayAdapter(Context context, int textViewResourceId, List<String> objects, List<Integer> objectId) {
+            super(context, textViewResourceId, objects);
+            for (int i = 0; i < objects.size(); i++)
+                mIdMap.put(objects.get(i), i);
+            trialId = objectId;
+        }
+
+        public long getItemId(int position) {
+            String item = getItem(position);
+            return mIdMap.get(item);
+        }
+
+        public int getActualId(int position)
+        {
+            return trialId.get(position);
+        }
     }
 
     class getShows extends AsyncTask<String,String,String>
@@ -206,12 +281,7 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println("etter if");
                     }
                     System.out.println("etter while");
-
-
-
                     db.close();
-
-
                 }
                 else{
                     List<NameValuePair> x = new ArrayList<>();
@@ -236,6 +306,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+
     }
 }
 

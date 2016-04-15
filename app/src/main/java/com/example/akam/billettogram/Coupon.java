@@ -172,9 +172,7 @@ public class Coupon extends AppCompatActivity {
 
                     db.insert(cv);
 
-                    db.close();
-
-                    // successfully created product
+                    //successfully created product
                     Intent i = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(i);
                     finish();

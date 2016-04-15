@@ -41,16 +41,10 @@ public class Billett extends AppCompatActivity {
         TextView antall=(TextView)findViewById(R.id.ant);
         Cursor cr = db.finnPersonMId(id);
 
-        tit.setText("Tittel:    "+cr.getString(cr.getColumnIndex(db.TITTEL)));
-        dato.setText("Dato:     "+cr.getString(cr.getColumnIndex(db.DATE)));
-        varig.setText("Kjøpsdato:   "+cr.getString(cr.getColumnIndex(db.TIME)));
-        antall.setText("Antall billetter:    "+cr.getString(cr.getColumnIndex(db.ANTALL)));
-
-
-
-
-
-
+        tit.setText(" Tittel:    "+cr.getString(cr.getColumnIndex(db.TITTEL)));
+        dato.setText(" Dato:     "+cr.getString(cr.getColumnIndex(db.DATE)));
+        varig.setText(" Kjøpsdato:   "+cr.getString(cr.getColumnIndex(db.TIME)));
+        antall.setText(" Antall billetter:    "+cr.getString(cr.getColumnIndex(db.ANTALL)));
 
     }
 
