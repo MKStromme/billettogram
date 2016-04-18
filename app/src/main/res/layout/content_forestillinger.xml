@@ -13,7 +13,7 @@
     tools:showIn="@layout/activity_forestillinger">
 
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/forestillinglist"
+        android:id="@+id/forestillingerlist"
         android:background="#0088cc"
         android:layout_width="500dp"
         android:layout_height="1000dp" />

@@ -1,6 +1,8 @@
 package com.example.akam.billettogram;
 
 import android.app.AlertDialog;
+import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,7 +22,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -34,7 +38,6 @@ import java.util.concurrent.ExecutionException;
 
 public class Forestillinger extends AppCompatActivity {
 
-
     ListView dagensaktivitet;
     TextView txt;
     ArrayList<String> listItems = new ArrayList<String>();
@@ -46,8 +49,32 @@ public class Forestillinger extends AppCompatActivity {
     int success;
     String msg;
     final Context c = this;
-    //StableArrayAdapter adb;
+    StableArrayAdapter adb;
     private static final String url_Forestillinger = "http://barnestasjonen.no/test/db_get_forestillinger.php";
+    private List<frstlng> frstlnglist= new ArrayList<frstlng>();
+
+
+    private class frstlng{
+        public String ID;
+        public String tittel;
+        public int listid;
+
+        public frstlng(int listid, String ID, String tittel){
+            this.listid = listid;
+            this.ID = ID;
+            this.tittel = tittel;
+        }
+        public String getID(){
+            return this.ID;
+        }
+        public String getTittel()
+        {
+            return this.tittel;
+        }
+        public int getlistid(){
+            return this.listid;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +85,7 @@ public class Forestillinger extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-        dagensaktivitet = (ListView) findViewById(R.id.forestillinglist);
+        dagensaktivitet = (ListView) findViewById(R.id.forestillingerlist);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems) {
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
@@ -81,33 +108,18 @@ public class Forestillinger extends AppCompatActivity {
 
         //JSONObject tickets = task.getJSon();
         adapter.notifyDataSetChanged();
-        //task.execute(new String[]{"http://barnestasjonen.no/test/db_get_forestillinger.php"});
-
-
-        //final ArrayList<String> list = new ArrayList<String>();
-        //final ArrayList<Integer> listId = new ArrayList<>();
-
-        /*if (cur.moveToFirst()) {
-            do {
-                list.add(cur.getString(0));
-                listId.add(cur.getInt(cur.getColumnIndex(db.ID)));
-            } while (cur.moveToNext());
-        }
-        cur.close();
-
-        final StableArrayAdapter adapter = new StableArrayAdapter(this, android.R.layout.simple_list_item_1, list, listId);
-        dagensaktivitet.setAdapter(adapter);*/
-        /*final Context c = this;*/
-
         dagensaktivitet.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                System.out.println("index: "+ position);
+                frstlng y = frstlnglist.get(position);
+                System.out.println("ID: "+y.getID()+ ". tittel: "+y.getTittel());
+
                 Intent i = new Intent(getApplicationContext(), Forestilling.class);
-                i.putExtra("selectedItem", listItems.get(position));
+                i.putExtra("selectedItem", y.getID());
                 startActivity(i);
+
             }
         });
 
@@ -115,12 +127,18 @@ public class Forestillinger extends AppCompatActivity {
 
     public void fromExtDB() throws JSONException {
         fstilling = hc.getJSONArray("forestillinger");
-
         for (int i = 0; i < fstilling.length(); i++) {
-            listItems.add(fstilling.getJSONObject(i).getString("id"));
+            String tittel = fstilling.getJSONObject(i).getString("tittel");
+            String ID = fstilling.getJSONObject(i).getString("id");
+            listItems.add(tittel);
+            frstlng x = new frstlng(i, ID, tittel);
+            frstlnglist.add(x);
+
         }
 
     }
+
+
 
 
     @Override
@@ -154,6 +172,28 @@ public class Forestillinger extends AppCompatActivity {
                     }
                 })
                 .show();
+    }
+
+    private class StableArrayAdapter extends ArrayAdapter<String> {
+        HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
+        List<Integer> trialId;
+
+        public StableArrayAdapter(Context context, int textViewResourceId, List<String> objects, List<Integer> objectId) {
+            super(context, textViewResourceId, objects);
+            for (int i = 0; i < objects.size(); i++)
+                mIdMap.put(objects.get(i), i);
+            trialId = objectId;
+        }
+
+        public long getItemId(int position) {
+            String item = getItem(position);
+            return mIdMap.get(item);
+        }
+
+        public int getActualId(int position)
+        {
+            return trialId.get(position);
+        }
     }
     class getShows extends AsyncTask<String, String, String> {
 

@@ -86,32 +86,6 @@ public class MainActivity extends AppCompatActivity {
 
         //JSONObject tickets = task.getJSon();
         adapter.notifyDataSetChanged();
-        //task.execute(new String[]{"http://barnestasjonen.no/test/db_get_forestillinger.php"});
-
-
-        //final ArrayList<String> list = new ArrayList<String>();
-        //final ArrayList<Integer> listId = new ArrayList<>();
-
-        /*if (cur.moveToFirst()) {
-            do {
-                list.add(cur.getString(0));
-                listId.add(cur.getInt(cur.getColumnIndex(db.ID)));
-            } while (cur.moveToNext());
-        }
-        cur.close();
-
-        final StableArrayAdapter adapter = new StableArrayAdapter(this, android.R.layout.simple_list_item_1, list, listId);
-        dagensaktivitet.setAdapter(adapter);*/
-        /*final Context c = this;
-
-        dagensaktivitet.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(c, Billett.class);
-                intent.putExtra("TryThis", adapter.getActualId(position));
-                startActivity(intent);
-            }
-        });*/
         dagensaktivitet.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -182,26 +156,14 @@ public class MainActivity extends AppCompatActivity {
     }
      //
     public void openCoupon(View view) {
-        // final Context context = this;
-        Button coupon = (Button) findViewById(R.id.koppong);
-        coupon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 Intent slideactivity = new Intent(MainActivity.this, Coupon.class);
                 startActivity(slideactivity);
-            }
-        });
+
     }
     public void openMineBilletter(View view) {
-        // final Context context = this;
-        Button mnbl = (Button) findViewById(R.id.show);
-        mnbl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 Intent slideactivity = new Intent(MainActivity.this, MineBilletter.class);
                 startActivity(slideactivity);
-            }
-        });
+
     }
 
     public void buyForestilling(View view) {
