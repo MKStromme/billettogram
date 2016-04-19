@@ -14,7 +14,7 @@ import java.util.Date;
 public class DBAdapter {
     Context context;
     static final String TAG = "DbHelper";
-    static final String DB_NAVN = "prosjektt.db";
+    static final String DB_NAVN = "billettogramdb.db";
     static final String TABELL = "billetter";
     static final String ID = BaseColumns._ID;
     static final String DATE = "dato";

@@ -60,7 +60,16 @@
         </activity>
         <activity
             android:name=".Forestilling"
-            android:label="@string/title_activity_forestilling"
+            android:label=""
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.akam.billettogram.MainActivity" />
+        </activity>
+        <activity
+            android:name=".Betaling"
+            android:label="@string/title_activity_betaling"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

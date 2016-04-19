@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
+import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -52,14 +52,40 @@ public class MainActivity extends AppCompatActivity {
     JSONParser jsonParser = new JSONParser();
     JSONObject hc= null;
     JSONArray tickets;
+    JSONArray fstilling;
     DBAdapter db;
     int success;
     String msg;
     final Context c = this;
     StableArrayAdapter adb;
+    public boolean ekstern=false;
 
-    private static final String url_orderedTickets = "http://barnestasjonen.no/test/db_get_billetter.php";
-    private static final String url_getForestillinger= "http://barnestasjonen.no/test/db_get_frontforestillinger.php";
+    private   String url_orderedTickets = "http://barnestasjonen.no/test/db_get_billetter.php";
+    private   String url_getForestillinger= "http://barnestasjonen.no/test/db_get_frontforestillinger.php";
+    private List<frstlng> frstlnglist= new ArrayList<frstlng>();
+
+
+    private class frstlng{
+        public String ID;
+        public String tittel;
+        public int listid;
+
+        public frstlng(int listid, String ID, String tittel){
+            this.listid = listid;
+            this.ID = ID;
+            this.tittel = tittel;
+        }
+        public String getID(){
+            return this.ID;
+        }
+        public String getTittel()
+        {
+            return this.tittel;
+        }
+        public int getlistid(){
+            return this.listid;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
         dagensaktivitet = (ListView) findViewById(R.id.todaylist);
        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems) {
             public View getView(int position, View convertView, ViewGroup parent) {
-                Log.d("dritt","drittttt");
                 View view = super.getView(position, convertView, parent);
                 TextView txt = (TextView) view.findViewById(android.R.id.text1);
                 txt.setTextColor(Color.WHITE);
@@ -82,30 +107,56 @@ public class MainActivity extends AppCompatActivity {
         dagensaktivitet.setAdapter(adapter);
 
         if(!fromLocalDB())
-            new getShows().execute();
-
-        //JSONObject tickets = task.getJSon();
-        adapter.notifyDataSetChanged();
-        dagensaktivitet.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("TAG2","vi er in buttonclick");
-                Intent intent = new Intent(c,Billett.class);
-                intent.putExtra("TryThis", adb.getActualId(position));
-                startActivity(intent);
+            try {
+                new getShows().execute().get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
             }
-        });
 
+        if(!ekstern) {
+            //JSONObject tickets = task.getJSon();
+            adapter.notifyDataSetChanged();
+            dagensaktivitet.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Log.d("TAG2", "vi er in buttonclick");
+                    Intent intent = new Intent(c, Billett.class);
+                    intent.putExtra("TryThis", adb.getActualId(position));
+                    startActivity(intent);
+                }
+            });
+        }
+        else {
+            dagensaktivitet.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    System.out.println("lll" + frstlnglist.toString());
+                    System.out.println("index: " + position);
+                    frstlng y = frstlnglist.get(position);
+                    System.out.println("ID: " + y.getID() + ". tittel: " + y.getTittel());
+
+                    Intent i = new Intent(getApplicationContext(), Forestilling.class);
+                    i.putExtra("selectedItem", y.getID());
+                    startActivity(i);
+
+                }
+            });
+        }
 
     }
 
     public void fromExtDB() throws JSONException
     {
-
-            tickets = hc.getJSONArray("tickets");
-            for (int i = 0; i < 3 && i < tickets.length(); i++) {
-                listItems.add(tickets.getJSONObject(i).getString("tittel"));
-            }
+        fstilling = hc.getJSONArray("tickets");
+        for (int i = 0; i < 3 && i < fstilling.length(); i++) {
+            String tittel = fstilling.getJSONObject(i).getString("tittel");
+            String ID = fstilling.getJSONObject(i).getString("id");
+            listItems.add(tittel);
+            frstlng x = new frstlng(i, ID, tittel);
+            frstlnglist.add(x);
+        }
     }
 
     private boolean fromLocalDB()
@@ -203,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
 
             List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-            params.add(new BasicNameValuePair("id", "adam@gmail.com"));
+            params.add(new BasicNameValuePair("id", "bruker1@gmail.com"));
             params.add(new BasicNameValuePair("type", "android"));
 
             JSONObject json = jsonParser.makeHttpRequest(url_orderedTickets,"POST", params);
@@ -215,7 +266,6 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("Vi er her:" + msg + "   " + success);
 
                 }
-
 
 
                 if (success == 1) {
@@ -247,9 +297,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else{
                     List<NameValuePair> x = new ArrayList<>();
-                    json = jsonParser.makeHttpRequest(url_getForestillinger,"POST",x);
-                    //hent forestillinger som brukeren kan kjope.
+                    json = jsonParser.makeHttpRequest(url_getForestillinger,"POST",x);//hent forestillinger som brukeren kan kjope.
                     hc=json;
+                    ekstern = true;
                 }
 
             } catch (JSONException e) {

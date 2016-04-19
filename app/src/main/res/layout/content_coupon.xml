@@ -37,17 +37,6 @@
         android:layout_alignEnd="@+id/qrcode"
         android:layout_toEndOf="@+id/antalltext">
     </Spinner>
-    <!--
-    <Button
-        android:layout_width="200dp"
-        android:layout_height="80dp"
-        android:text="Scan"
-        android:background="@drawable/backgroundtheme"
-        android:id="@+id/scan"
-        android:layout_marginTop="63dp"
-        android:layout_below="@+id/qrcode"
-        android:layout_alignStart="@+id/accept"
-        android:onClick="openCamera"/>-->
 
     <Button
         android:layout_width="200dp"

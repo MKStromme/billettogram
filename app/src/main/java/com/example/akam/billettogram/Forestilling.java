@@ -13,8 +13,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.apache.http.NameValuePair;
@@ -22,6 +24,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,10 +42,13 @@ public class Forestilling extends AppCompatActivity {
     DBAdapter db;
     JSONArray arng;
     int success;
+    int sumresult;
     String msg;
     final Context c = this;
     public String s;
-    StableArrayAdapter adb;
+    Spinner ant;
+    TextView sumtext;
+
 
     private String url_getForestilling= "http://barnestasjonen.no/test/db_get_forestilling.php";
 
@@ -52,6 +58,21 @@ public class Forestilling extends AppCompatActivity {
         setContentView(R.layout.activity_forestilling);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        ant =(Spinner)findViewById(R.id.antplass);
+        sumtext=(TextView)findViewById(R.id.sum);
+
+        ant.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                sumtext.setText(String.valueOf(sumresult * (position + 1)) + " kr");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         Bundle extras = getIntent().getExtras();
          s = extras.getString("selectedItem");
@@ -65,7 +86,6 @@ public class Forestilling extends AppCompatActivity {
         }
     }
 
-
     public void fromExtDB() throws JSONException
     {
 
@@ -75,6 +95,7 @@ public class Forestilling extends AppCompatActivity {
         TextView varighet=(TextView)findViewById(R.id.varighet);
         TextView antall=(TextView)findViewById((R.id.antled));
         TextView plass=(TextView)findViewById((R.id.place));
+        TextView pris =(TextView)findViewById(R.id.pris);
 
 
         for(int i=0;i<arng.length();i++) {
@@ -85,6 +106,8 @@ public class Forestilling extends AppCompatActivity {
             antall.append(arng.getJSONObject(i).getString("ledigePlasser"));
             varighet.append(arng.getJSONObject(i).getString("varighet"));
             plass.append(arng.getJSONObject(i).getString("fylke"));
+            pris.append(arng.getJSONObject(i).getString("pris"));
+            sumresult = Integer.parseInt(arng.getJSONObject(i).getString("pris"));
         }
         /*TextView tit = (TextView)findViewById(R.id.tittel);
         TextView dato = (TextView)findViewById(R.id.dato);
@@ -92,6 +115,11 @@ public class Forestilling extends AppCompatActivity {
         TextView antall=(TextView)findViewById((R.id.ant));
 
         tit.setText(hc.getJSONObject("forestilling").getString("tittel"));*/
+
+    }
+    public void betall(View view) {
+        Intent intent = new Intent(Forestilling.this, Betaling.class);
+        startActivity(intent);
 
     }
 
@@ -112,11 +140,6 @@ public class Forestilling extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-    public void onBackPressed() {
-        Intent startNewActivityOpen = new Intent(Forestilling.this, Forestillinger.class);
-        startActivity(startNewActivityOpen);
-
     }
 
     private class StableArrayAdapter extends ArrayAdapter<String> {

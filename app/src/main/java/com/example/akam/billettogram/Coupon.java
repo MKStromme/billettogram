@@ -95,30 +95,11 @@ public class Coupon extends AppCompatActivity {
         qrFelt = (EditText) findViewById(R.id.qrcode);
         ant =(Spinner)findViewById(R.id.antplass);
         qraccept =(Button)findViewById(R.id.accept);
-        qraccept.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 String kode = qrFelt.getText().toString();
                 String antpl = ant.getSelectedItem().toString();
                 new CreateNewProduct().execute(kode,antpl);
 
 
-            }
-        });
-    }
-
-    public void openCamera(View view) {
-        final Context context = this;
-
-        /*Button scannerButton = (Button) findViewById();
-        scannerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            //public void onClick(View v) {
-
-                Intent intent = new Intent(v.getContext(), BarcodeScanner.class);
-                startActivity(intent);
-            }
-        });*/
     }
 
     public void couponResult(){
@@ -140,7 +121,7 @@ public class Coupon extends AppCompatActivity {
 
             String msg = "";
             List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("id", "magnusmuluag@gmail.com"));
+            params.add(new BasicNameValuePair("id", "bruker1@gmail.com"));
             params.add(new BasicNameValuePair("kode", args[0].toString()));
             params.add(new BasicNameValuePair("type", "android"));
             params.add(new BasicNameValuePair("antall", args[1].toString()));

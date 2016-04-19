@@ -13,11 +13,22 @@
     tools:context="com.example.akam.billettogram.Forestilling"
     tools:showIn="@layout/activity_forestilling">
 
+    <ImageView
+        android:layout_height="100dp"
+        android:layout_width="150dp"
+        android:id="@+id/image"
+        android:layout_gravity="center"
+        android:background="@drawable/arsho"
+        android:layout_alignParentTop="true"
+        android:layout_alignEnd="@+id/pay" />
 
     <TableLayout
         android:layout_width="match_parent"
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="5dp"
         android:id="@+id/forestillingtabell"
-        android:layout_height="170dp"
+        android:layout_height="180dp"
+        android:layout_below="@+id/image"
         android:background="@drawable/backgroundtheme"
         android:layout_alignParentStart="true">
 
@@ -25,42 +36,134 @@
             <TextView
                 android:layout_marginTop="5dp"
                 android:text="Tittel:"
+                android:padding="3dip"
+                android:layout_marginLeft="5dp"
+                android:textColor="#ffffff"/>
+
+            <TextView
+                android:text=""
                 android:id="@+id/tittel"
                 android:padding="3dip"
                 android:textColor="#ffffff"/>
+
         </TableRow>
         <TableRow>
             <TextView
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="5dp"
                 android:text="Dato:"
+                android:padding="3dip"
+                android:textColor="#ffffff"/>
+
+            <TextView
+                android:text=""
                 android:id="@+id/dato"
                 android:padding="3dip"
                 android:textColor="#ffffff"/>
         </TableRow>
         <TableRow>
             <TextView
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="3dp"
                 android:text="Varighet:"
+                android:layout_marginLeft="5dp"
+                android:padding="3dip"
+                android:textColor="#ffffff"/>
+
+            <TextView
+                android:text=""
                 android:id="@+id/varighet"
                 android:padding="3dip"
                 android:textColor="#ffffff"/>
         </TableRow>
         <TableRow>
             <TextView
-                android:text="Ledige: "
-                android:layout_marginTop="5dp"
+                android:text="Ledige:"
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="5dp"
+                android:padding="3dip"
+                android:textColor="#ffffff"/>
+            <TextView
+                android:text=" "
                 android:id="@+id/antled"
                 android:padding="3dip"
                 android:textColor="#ffffff"/>
         </TableRow>
         <TableRow>
             <TextView
-                android:text="Sted: "
-                android:layout_marginTop="5dp"
+                android:text="Sted:"
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="5dp"
+                android:padding="3dip"
+                android:textColor="#ffffff"/>
+            <TextView
+                android:text=""
                 android:id="@+id/place"
                 android:padding="3dip"
                 android:textColor="#ffffff"/>
         </TableRow>
+        <TableRow>
+            <TextView
+                android:text="Pris:"
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="5dp"
+                android:padding="3dip"
+                android:textColor="#ffffff"/>
+            <TextView
+                android:text=""
+                android:id="@+id/pris"
+                android:padding="3dip"
+                android:textColor="#ffffff"/>
+        </TableRow>
+    </TableLayout>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:text="Betall"
+        android:id="@+id/pay"
+        android:textColor="#ffffff"
+        android:background="@drawable/backgroundtheme"
+        android:onClick="betall"
+        android:layout_below="@+id/pristabell"
+        android:layout_centerHorizontal="true" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:id="@+id/pristabell"
+        android:layout_below="@+id/forestillingtabell">
+        <TableRow>
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Antall:"
+                android:id="@+id/antalltext"
+                android:textColor="#ffffff" />
+
+            <Spinner
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:entries="@array/ledigeplasser"
+                android:id="@+id/antplass"
+                android:background="#ffffff"
+                android:layout_marginLeft="50dp" />
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Sum:"
+                android:layout_marginLeft="15dp"
+                android:textColor="#ffffff" />
+                />
+            <TextView
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text=""
+                android:id="@+id/sum"
+                android:textColor="#ffffff" />
+        </TableRow>
+
     </TableLayout>
 </RelativeLayout>
 
