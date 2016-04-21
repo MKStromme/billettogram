@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     private   String url_orderedTickets = "http://barnestasjonen.no/test/db_get_billetter.php";
     private   String url_getForestillinger= "http://barnestasjonen.no/test/db_get_frontforestillinger.php";
+
     private List<frstlng> frstlnglist= new ArrayList<frstlng>();
 
 
@@ -254,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
 
             List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-            params.add(new BasicNameValuePair("id", "bruker1@gmail.com"));
+            params.add(new BasicNameValuePair("id", "bruker3@gmail.com"));
             params.add(new BasicNameValuePair("type", "android"));
 
             JSONObject json = jsonParser.makeHttpRequest(url_orderedTickets,"POST", params);

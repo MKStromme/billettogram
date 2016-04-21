@@ -121,7 +121,7 @@ public class Coupon extends AppCompatActivity {
 
             String msg = "";
             List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("id", "bruker1@gmail.com"));
+            params.add(new BasicNameValuePair("id", "bruker3@gmail.com"));
             params.add(new BasicNameValuePair("kode", args[0].toString()));
             params.add(new BasicNameValuePair("type", "android"));
             params.add(new BasicNameValuePair("antall", args[1].toString()));
@@ -149,6 +149,7 @@ public class Coupon extends AppCompatActivity {
                     cv.put(db.KODE,json.getString("kode"));
                     cv.put(db.ANTALL,Integer.parseInt(json.getString("antall")));
                     cv.put(db.TIME,json.getString("time"));
+                    cv.put(db.SANG,json.getString("sang"));
 
 
                     db.insert(cv);

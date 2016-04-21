@@ -53,4 +53,14 @@
                 android:textColor="#ffffff"/>
         </TableRow>
     </TableLayout>
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:id="@+id/download"
+        android:textColor="#ffffff"
+        android:text="Last ned musikk"
+        android:background="@drawable/backgroundtheme"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="lastNedMusikk"/>
 </RelativeLayout>

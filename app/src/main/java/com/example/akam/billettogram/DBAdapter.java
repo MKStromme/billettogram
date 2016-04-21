@@ -14,7 +14,7 @@ import java.util.Date;
 public class DBAdapter {
     Context context;
     static final String TAG = "DbHelper";
-    static final String DB_NAVN = "billettogramdb.db";
+    static final String DB_NAVN = "centertainmentt.db";
     static final String TABELL = "billetter";
     static final String ID = BaseColumns._ID;
     static final String DATE = "dato";
@@ -110,6 +110,19 @@ public class DBAdapter {
         cur.moveToFirst();
         Log.d("DATA", "!!!!!!!!!-------" + id);
         return cur;
+    }
+
+
+    public String finnSang(int id)
+    {
+        String[] cols = {ID,DATE,FID,TITTEL,PRIS,BILDET,ANTALL,KODE,TIME,SANG};
+        //String sql = "SELECT * FROM " + TABELL + " WHERE " + ID + " = " + id;
+        Log.d("ID", "!!!!!!!!!-------" + id);
+        //Cursor cur = db.rawQuery(sql, null);
+        Cursor cur = db.query(TABELL,cols,ID + " == " + id,null,null,null,SANG);
+        cur.moveToFirst();
+        Log.d("DATA", "!!!!!!!!!-------" + id);
+        return cur.toString();
     }
 
 }
