@@ -3,6 +3,7 @@ package com.example.akam.billettogram;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,7 +19,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,26 +29,35 @@ import org.json.JSONException;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
-public class Billett extends AppCompatActivity {
+public class Billett extends AppCompatActivity implements MediaController.MediaPlayerControl{
 
     DBAdapter db;
     Context context;
     int id;
     public JSONArray sangstring;
+    File file;
+    public MediaPlayer mpplayer;
+    public ToggleButton tb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_billett);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mpplayer = new MediaPlayer();
+        tb=(ToggleButton)findViewById(R.id.playpause);
         db = new DBAdapter(this);
         db.open();
+
+
 
         Bundle extras = getIntent().getExtras();
         Log.d("TAG:", "" + extras.getInt("TryThis"));
@@ -72,8 +84,14 @@ public class Billett extends AppCompatActivity {
 
     }
     public void lastNedMusikk(View view) {
+
+        File appfolder = new File(getFilesDir() + File.pathSeparator + "Music");
+        if(!appfolder.exists()){
+            appfolder.mkdir();
+            System.out.println("kkkkk");
+        }
         File folder = new File(Environment.getExternalStorageDirectory() +
-                File.separator + "Music");
+                File.separator + "Download");
         boolean success = true;
         if (!folder.exists()) {
             success = folder.mkdir();
@@ -91,7 +109,23 @@ public class Billett extends AppCompatActivity {
             System.out.println("file not maked");
         }
         DownloadFile dlf = new DownloadFile();
-        dlf.execute();
+        try {
+            dlf.execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        tbsetvisible();
+    }
+
+    public void startPause(View v){
+        if(tb.getText().equals("❚❚")){
+            start();
+        }else if(tb.getText().equals("▶")){
+            pause();
+        }
     }
 
 
@@ -113,11 +147,77 @@ public class Billett extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void start() {
+        mpplayer.start();
+    }
+
+    @Override
+    public void pause() {
+        mpplayer.pause();
+    }
+
+    @Override
+    public int getDuration() {
+        return 0;
+    }
+
+    @Override
+    public int getCurrentPosition() {
+        return 0;
+    }
+
+    @Override
+    public void seekTo(int pos) {
+
+    }
+
+    @Override
+    public boolean isPlaying() {
+        return false;
+    }
+
+    @Override
+    public int getBufferPercentage() {
+        return 0;
+    }
+
+    @Override
+    public boolean canPause() {
+        return false;
+    }
+
+    @Override
+    public boolean canSeekBackward() {
+        return false;
+    }
+
+    @Override
+    public boolean canSeekForward() {
+        return false;
+    }
+
+    @Override
+    public int getAudioSessionId() {
+        return 0;
+    }
+
+    public void tbsetvisible(){
+        tb.setVisibility(View.VISIBLE);
+    }
+
     private class DownloadFile extends AsyncTask<String, Integer, String> {
         @Override
         protected String doInBackground(String... urlParams) {
             System.out.println("Magnus" + sangstring);
             int count;
+            String x = null;
+            try {
+                x = Environment.getExternalStorageDirectory() +
+                        File.separator + "Music" + File.separator + sangstring.getString(0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             for(int i = 0;i<sangstring.length();i++) {
                 try {
                     System.out.println("Akam"+ sangstring.get(i));
@@ -135,6 +235,10 @@ public class Billett extends AppCompatActivity {
                     OutputStream output = new FileOutputStream(Environment.getExternalStorageDirectory() +
                             File.separator + "Music" + File.separator + sangstring.getString(i));
 
+
+                    OutputStream localoutput = new FileOutputStream(getFilesDir() + File.pathSeparator + "Music" +
+                            File.separator + sangstring.getString(i));
+
                     byte data[] = new byte[1024];
 
                     long total = 0;
@@ -144,17 +248,35 @@ public class Billett extends AppCompatActivity {
                         // publishing the progress....
                         publishProgress((int) (total * 100 / lenghtOfFile));
                         output.write(data, 0, count);
+                        localoutput.write(data, 0, count);
                     }
 
                     output.flush();
                     output.close();
                     input.close();
-                  sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+
+
+
+                    //sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
                    // sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
 
+                    /*Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    intent.setData(Uri.fromFile(file));
+                    sendBroadcast(intent);*/
+
                 } catch (Exception e) {
-                    System.out.println("error: " + e.toString());
+                    System.out.println("error: " + e.getLocalizedMessage());
                 }
+            }
+            try {
+                mpplayer.setDataSource(x);
+                System.out.println("llllll1");
+                mpplayer.prepare();
+                System.out.println("llllll2");
+                mpplayer.start();
+                System.out.println("llllll3");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             return null;
         }
