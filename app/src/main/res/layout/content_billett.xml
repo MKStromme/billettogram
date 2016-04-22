@@ -12,42 +12,77 @@
     tools:context="com.example.akam.billettogram.Billett"
     tools:showIn="@layout/activity_billett">
 
+    <ImageView
+        android:layout_height="100dp"
+        android:layout_width="150dp"
+        android:id="@+id/image"
+        android:layout_gravity="center"
+        android:background="@drawable/arsho"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/download" />
 
     <TableLayout
         android:layout_width="match_parent"
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="5dp"
         android:id="@+id/billettstabel"
-        android:layout_height="170dp"
+        android:layout_height="130dp"
+        android:layout_below="@+id/image"
         android:background="@drawable/backgroundtheme"
         android:layout_alignParentStart="true">
 
         <TableRow>
             <TextView
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:text="Tittel:"
+                android:padding="3dip"
+                android:textColor="#ffffff"/>
+            <TextView
+                android:layout_marginTop="5dp"
+                android:text=""
                 android:id="@+id/tittel"
                 android:padding="3dip"
                 android:textColor="#ffffff"/>
+
         </TableRow>
         <TableRow>
             <TextView
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:text="Dato:"
+                android:padding="3dip"
+                android:textColor="#ffffff"/>
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:text=""
                 android:id="@+id/dato"
                 android:padding="3dip"
                 android:textColor="#ffffff"/>
         </TableRow>
         <TableRow>
             <TextView
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:text="Varighet:"
+                android:padding="3dip"
+                android:textColor="#ffffff"/>
+
+            <TextView
+                android:layout_marginTop="5dp"
+                android:text=""
                 android:id="@+id/varighet"
                 android:padding="3dip"
                 android:textColor="#ffffff"/>
+
         </TableRow>
         <TableRow>
             <TextView
                 android:text="Antall: "
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
+                android:padding="3dip"
+                android:textColor="#ffffff"/>
+            <TextView
+                android:text=""
+                android:layout_marginTop="5dp"
                 android:id="@+id/ant"
                 android:padding="3dip"
                 android:textColor="#ffffff"/>
@@ -60,9 +95,10 @@
         android:textColor="#ffffff"
         android:text="Last ned musikk"
         android:background="@drawable/backgroundtheme"
-        android:layout_centerVertical="true"
+        android:onClick="lastNedMusikk"
+        android:layout_below="@+id/billettstabel"
         android:layout_centerHorizontal="true"
-        android:onClick="lastNedMusikk"/>
+        android:layout_marginTop="25dp" />
 
     <ToggleButton
         android:visibility="invisible"
