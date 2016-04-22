@@ -122,8 +122,7 @@
         android:layout_height="50dp"
         android:text="Betall"
         android:id="@+id/pay"
-        android:textColor="#ffffff"
-        android:background="@drawable/backgroundtheme"
+
         android:onClick="betall"
         android:layout_below="@+id/pristabell"
         android:layout_centerHorizontal="true" />
