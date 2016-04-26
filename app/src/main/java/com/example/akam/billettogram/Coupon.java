@@ -121,7 +121,7 @@ public class Coupon extends AppCompatActivity {
 
             String msg = "";
             List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("id", "bruker3@gmail.com"));
+            params.add(new BasicNameValuePair("id", "Ole23@gmail.com"));
             params.add(new BasicNameValuePair("kode", args[0].toString()));
             params.add(new BasicNameValuePair("type", "android"));
             params.add(new BasicNameValuePair("antall", args[1].toString()));

@@ -46,6 +46,8 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
     File file;
     public MediaPlayer mpplayer;
     public ToggleButton tb;
+    public String tittel;
+    public Button dw;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,8 +58,7 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
         tb=(ToggleButton)findViewById(R.id.playpause);
         db = new DBAdapter(this);
         db.open();
-
-
+        dw = (Button)findViewById(R.id.download);
 
         Bundle extras = getIntent().getExtras();
         Log.d("TAG:", "" + extras.getInt("TryThis"));
@@ -71,43 +72,83 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
         TextView varig = (TextView) findViewById(R.id.varighet);
         TextView antall=(TextView)findViewById(R.id.ant);
         Cursor cr = db.finnPersonMId(id);
+        boolean notsang = true;
+        System.out.println("QQQ "+cr.getString(cr.getColumnIndex(db.SANG)));
 
+        if(cr.getString(cr.getColumnIndex(db.SANG)).equals("null")) {
+            System.out.println("MMMM" + cr.getString(cr.getColumnIndex(db.SANG)));
+            notsang = false;
+            dw.setEnabled(false);
+            dw.setText("Ingen sang");
+            tb.setVisibility(View.GONE);
+        }
+        tittel = cr.getString(cr.getColumnIndex(db.TITTEL));
         tit.setText(cr.getString(cr.getColumnIndex(db.TITTEL)));
         dato.setText(cr.getString(cr.getColumnIndex(db.DATE)));
         varig.setText(cr.getString(cr.getColumnIndex(db.TIME)));
         antall.setText(cr.getString(cr.getColumnIndex(db.ANTALL)));
-        try {
-            sangstring = new JSONArray(cr.getString(cr.getColumnIndex(db.SANG)));
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if(notsang){
+            try {
+                sangstring = new JSONArray(cr.getString(cr.getColumnIndex(db.SANG)));
+                boolean issong = true;
+                for(int i = 0; i < sangstring.length(); i++){
+                    File sang = new File(Environment.getExternalStorageDirectory() + File.separator + "Music" + File.separator + "Centertainment" + File.separator + tittel);
+                    if(!sang.exists()){
+                        issong = false;
+                    }
+                }
+                if(issong){
+                    dw.setVisibility(View.GONE);
+                    dw.setEnabled(false);
+                    tbsetvisible();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
+
 
     }
     public void lastNedMusikk(View view) {
-
-        File appfolder = new File(getFilesDir() + File.pathSeparator + "Music");
+        tb.setEnabled(false);
+        File appfolder = new File(getFilesDir() + File.separator + "Music");
         if(!appfolder.exists()){
             appfolder.mkdir();
             System.out.println("kkkkk");
         }
+        appfolder = new File(getFilesDir() + File.separator + "Music" + File.separator + "Centertainment");
+        if(!appfolder.exists()){
+            appfolder.mkdir();
+            System.out.println("pppp");
+        }
+        appfolder = new File(getFilesDir() + File.separator + "Music" + File.separator + "Centertainment" + File.separator + tittel);
+        if(!appfolder.exists()){
+            appfolder.mkdir();
+            System.out.println("pppp");
+        }
         File folder = new File(Environment.getExternalStorageDirectory() +
-                File.separator + "Download");
-        boolean success = true;
+                File.separator + "Music");
         if (!folder.exists()) {
-            success = folder.mkdir();
+            folder.mkdir();
             System.out.println("file make");
         }
-        else {
+        folder = new File(Environment.getExternalStorageDirectory() +
+                File.separator + "Music" + File.separator + "Centertainment");
 
-            System.out.println("file unmake");
+        if (!folder.exists()) {
+            folder.mkdir();
+            System.out.println("file make");
         }
-        if (success) {
-            // Do something on success
-            System.out.println("file maked");
-        } else {
-            // Do something else on failure
-            System.out.println("file not maked");
+        folder = new File(Environment.getExternalStorageDirectory() +
+                File.separator + "Music" + File.separator + "Centertainment" + File.separator + tittel);
+
+        if (!folder.exists()) {
+            folder.mkdir();
+            System.out.println("file make");
         }
+
+
+
         DownloadFile dlf = new DownloadFile();
         try {
             dlf.execute().get();
@@ -203,10 +244,25 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
     }
 
     public void tbsetvisible(){
+
+        try {
+            mpplayer.setDataSource(Environment.getExternalStorageDirectory() +
+                    File.separator + "Music" + File.separator + "Centertainment" + File.separator + tittel + File.separator + sangstring.getString(0));
+            System.out.println("llllll1");
+            mpplayer.prepare();
+            System.out.println("llllll2");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         tb.setVisibility(View.VISIBLE);
+        tb.setEnabled(true);
     }
 
     private class DownloadFile extends AsyncTask<String, Integer, String> {
+
         @Override
         protected String doInBackground(String... urlParams) {
             System.out.println("Magnus" + sangstring);
@@ -214,7 +270,9 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
             String x = null;
             try {
                 x = Environment.getExternalStorageDirectory() +
-                        File.separator + "Music" + File.separator + sangstring.getString(0);
+                        File.separator + "Music" + File.separator + "Centertainment" + File.separator + tittel + File.separator + sangstring.getString(0);
+
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -233,11 +291,11 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
                     // downlod the file
                     InputStream input = new BufferedInputStream(url.openStream());
                     OutputStream output = new FileOutputStream(Environment.getExternalStorageDirectory() +
-                            File.separator + "Music" + File.separator + sangstring.getString(i));
+                            File.separator + "Music" + File.separator + "Centertainment" + File.separator + tittel + File.separator + sangstring.getString(i));
 
 
-                    OutputStream localoutput = new FileOutputStream(getFilesDir() + File.pathSeparator + "Music" +
-                            File.separator + sangstring.getString(i));
+                    OutputStream localoutput = new FileOutputStream(getFilesDir() + File.separator + "Music" +
+                            File.separator + "Centertainment" + File.separator + tittel + File.separator + sangstring.getString(i));
 
                     byte data[] = new byte[1024];
 
@@ -253,6 +311,8 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
 
                     output.flush();
                     output.close();
+                    localoutput.flush();
+                    localoutput.close();
                     input.close();
 
 

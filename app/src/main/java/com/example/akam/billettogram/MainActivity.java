@@ -151,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
     public void fromExtDB() throws JSONException
     {
         fstilling = hc.getJSONArray("tickets");
+        System.out.println("DDDD"+fstilling.toString());
         for (int i = 0; i < 3 && i < fstilling.length(); i++) {
             String tittel = fstilling.getJSONObject(i).getString("tittel");
             String ID = fstilling.getJSONObject(i).getString("id");
@@ -255,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
 
             List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-            params.add(new BasicNameValuePair("id", "bruker3@gmail.com"));
+            params.add(new BasicNameValuePair("id", "Ole23@gmail.com"));
             params.add(new BasicNameValuePair("type", "android"));
 
             JSONObject json = jsonParser.makeHttpRequest(url_orderedTickets,"POST", params);
@@ -289,7 +290,9 @@ public class MainActivity extends AppCompatActivity {
                             cv.put(db.KODE,tempjson.getString("kode"));
                             cv.put(db.ANTALL,Integer.parseInt(tempjson.getString("antall")));
                             cv.put(db.TIME,tempjson.getString("time"));
-                            db.insert(cv);
+                            cv.put(db.SANG,tempjson.getString("sang"));
+
+                        db.insert(cv);
 
                         System.out.println("etter if");
                     }

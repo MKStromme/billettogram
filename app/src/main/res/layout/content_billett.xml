@@ -101,15 +101,15 @@
         android:layout_marginTop="25dp" />
 
     <ToggleButton
-        android:visibility="invisible"
+        android:visibility="gone"
         android:layout_width="150px"
         android:layout_height="100px"
         android:id="@+id/playpause"
         android:textSize="25dp"
-        android:textOff="❚❚"
+        android:textOff="▶"
         android:background="@drawable/backgroundtheme"
         android:textColor="#ffffff"
-        android:textOn="▶"
+        android:textOn="❚❚"
         android:layout_below="@+id/download"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
