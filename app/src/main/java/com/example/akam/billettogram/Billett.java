@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.MediaController;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -48,13 +49,18 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
     public ToggleButton tb;
     public String tittel;
     public Button dw;
+    public String currentSong;
+    public TextView songnavn;
+    public TableLayout media;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_billett);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mpplayer = new MediaPlayer();
+        //mpplayer = new MediaPlayer();
+        songnavn = (TextView)findViewById(R.id.songtitle);
+        media=(TableLayout)findViewById(R.id.mediatable);
         tb=(ToggleButton)findViewById(R.id.playpause);
         db = new DBAdapter(this);
         db.open();
@@ -80,7 +86,6 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
             notsang = false;
             dw.setEnabled(false);
             dw.setText("Ingen sang");
-            tb.setVisibility(View.GONE);
         }
         tittel = cr.getString(cr.getColumnIndex(db.TITTEL));
         tit.setText(cr.getString(cr.getColumnIndex(db.TITTEL)));
@@ -92,7 +97,7 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
                 sangstring = new JSONArray(cr.getString(cr.getColumnIndex(db.SANG)));
                 boolean issong = true;
                 for(int i = 0; i < sangstring.length(); i++){
-                    File sang = new File(Environment.getExternalStorageDirectory() + File.separator + "Music" + File.separator + "Centertainment" + File.separator + tittel);
+                    File sang = new File(Environment.getExternalStorageDirectory() + File.separator + "Music" + File.separator + "Centertainment" + File.separator + tittel + File.separator + sangstring.getString(i));
                     if(!sang.exists()){
                         issong = false;
                     }
@@ -107,10 +112,8 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
             }
         }
 
-
     }
     public void lastNedMusikk(View view) {
-        tb.setEnabled(false);
         File appfolder = new File(getFilesDir() + File.separator + "Music");
         if(!appfolder.exists()){
             appfolder.mkdir();
@@ -148,7 +151,6 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
         }
 
 
-
         DownloadFile dlf = new DownloadFile();
         try {
             dlf.execute().get();
@@ -158,9 +160,22 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
             e.printStackTrace();
         }
 
+        try {
+            currentSong = sangstring.getString(0);
+            songnavn.setText(currentSong);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         tbsetvisible();
     }
 
+    @Override
+    public void onBackPressed(){
+        if(mpplayer != null) {
+            mpplayer.stop();
+        }
+        finish();
+    }
     public void startPause(View v){
         if(tb.getText().equals("❚❚")){
             start();
@@ -169,6 +184,66 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
         }
     }
 
+
+
+    public void backsong(View v) throws JSONException, IOException {
+        System.out.println("back");
+        if(sangstring.getString(0).equals(currentSong)){
+            System.out.println("back2");
+            mpplayer.stop();
+            mpplayer.reset();
+            mpplayer.setDataSource(Environment.getExternalStorageDirectory() + File.separator + "Music" + File.separator + "Centertainment" + File.separator + tittel + File.separator + sangstring.getString(0));
+            mpplayer.prepare();
+            if(tb.getText().equals("❚❚")) {
+                start();
+            }
+            return;
+        }
+        for(int i = 1; i < sangstring.length(); i++){
+            if(sangstring.getString(i).equals(currentSong)) {
+                System.out.println("back3");
+                mpplayer.stop();
+                mpplayer.reset();
+
+                mpplayer.setDataSource(Environment.getExternalStorageDirectory() + File.separator + "Music" + File.separator + "Centertainment" + File.separator + tittel + File.separator + sangstring.getString(i - 1));
+                System.out.println("pomfritt" + Environment.getExternalStorageDirectory() + File.separator + "Music" + File.separator + "Centertainment" + File.separator + sangstring.getString(i - 1));
+                currentSong = sangstring.getString(i-1);
+                System.out.println("pompom " + currentSong);
+                songnavn.setText(currentSong);
+                mpplayer.prepare();
+                if(tb.getText().equals("❚❚")) {
+                    start();
+                }
+                return;
+            }
+        }
+    }
+    public void nextsong(View v) throws JSONException, IOException {
+        System.out.println("next");
+        if(sangstring.getString(sangstring.length()-1).equals(currentSong)){
+            System.out.println("next2");
+            mpplayer.stop();
+            return;
+        }
+        for(int i = 0; i < sangstring.length(); i++){
+            System.out.println("next3 " + currentSong + "  -  " + sangstring.getString(i));
+            if(sangstring.getString(i).equals(currentSong)) {
+                mpplayer.stop();
+                mpplayer.reset();
+                mpplayer.setDataSource(Environment.getExternalStorageDirectory() + File.separator + "Music" + File.separator + "Centertainment" + File.separator + tittel + File.separator + sangstring.getString(i+1));
+                System.out.println("pomfritt" + Environment.getExternalStorageDirectory() + File.separator + "Music" + File.separator + "Centertainment" + File.separator + sangstring.getString(i + 1));
+                currentSong = sangstring.getString(i+1);
+                System.out.println("pompom " + currentSong);
+                songnavn.setText(currentSong);
+                mpplayer.prepare();
+
+                if(tb.getText().equals("❚❚")) {
+                    start();
+                }
+                return;
+            }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -246,19 +321,21 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
     public void tbsetvisible(){
 
         try {
-            mpplayer.setDataSource(Environment.getExternalStorageDirectory() +
-                    File.separator + "Music" + File.separator + "Centertainment" + File.separator + tittel + File.separator + sangstring.getString(0));
+            mpplayer = new MediaPlayer();
+            mpplayer.setDataSource(Environment.getExternalStorageDirectory() + File.separator + "Music" + File.separator + "Centertainment" + File.separator + tittel + File.separator + sangstring.getString(0));
             System.out.println("llllll1");
             mpplayer.prepare();
-            System.out.println("llllll2");
+            currentSong = sangstring.getString(0);
+            songnavn.setText(currentSong);
+            System.out.println("llllll2"+currentSong);
 
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        tb.setVisibility(View.VISIBLE);
-        tb.setEnabled(true);
+        media.setVisibility(View.VISIBLE);
+        dw.setVisibility(View.GONE);
     }
 
     private class DownloadFile extends AsyncTask<String, Integer, String> {
@@ -278,8 +355,10 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
             }
             for(int i = 0;i<sangstring.length();i++) {
                 try {
+                    String parsedstring = sangstring.getString(i);
+                    parsedstring = parsedstring.replaceAll(" ", "%20");
                     System.out.println("Akam"+ sangstring.get(i));
-                    String urlstring = "http://www.barnestasjonen.no/test/songs/"+sangstring.getString(i);
+                    String urlstring = "http://www.barnestasjonen.no/test/songs/"+parsedstring;
                     System.out.println("ggggg" + urlstring);
                     URL url = new URL(urlstring);
                     System.out.println("hhhhh");
@@ -328,7 +407,7 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
                     System.out.println("error: " + e.getLocalizedMessage());
                 }
             }
-            try {
+            /*try {
                 mpplayer.setDataSource(x);
                 System.out.println("llllll1");
                 mpplayer.prepare();
@@ -337,7 +416,7 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
                 System.out.println("llllll3");
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
             return null;
         }
     }

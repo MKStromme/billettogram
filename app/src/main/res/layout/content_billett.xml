@@ -16,7 +16,7 @@
         android:layout_height="100dp"
         android:layout_width="150dp"
         android:id="@+id/image"
-        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
         android:background="@drawable/arsho"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/download" />
@@ -24,6 +24,8 @@
     <TableLayout
         android:layout_width="match_parent"
         android:layout_marginTop="3dp"
+
+        android:layout_centerHorizontal="true"
         android:layout_marginLeft="5dp"
         android:id="@+id/billettstabel"
         android:layout_height="130dp"
@@ -100,18 +102,59 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp" />
 
-    <ToggleButton
+    <TableLayout
+        android:id="@+id/mediatable"
         android:visibility="gone"
-        android:layout_width="150px"
+        android:layout_below="@+id/billettstabel"
+        android:layout_width="match_parent"
         android:layout_height="100px"
+        android:layout_marginLeft="20px"
+        android:layout_marginTop="100dp">
+        <TableRow>
+            <TextView
+                android:layout_span="3"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="hhhhh"
+                android:layout_width="match_parent"
+                android:id="@+id/songtitle"
+                android:textColor="#ffffff" />
+        </TableRow>
+        <TableRow>
+        <Button
+        android:layout_width="120px"
+        android:layout_height="80px"
+        android:id="@+id/back"
+        android:textSize="25dp"
+        android:textColor="#ffffff"
+        android:text="◀◀"
+        android:onClick="backsong"
+        android:background="@drawable/backgroundtheme" />
+
+        <ToggleButton
+        android:layout_width="120px"
+        android:layout_height="80px"
         android:id="@+id/playpause"
         android:textSize="25dp"
+        android:layout_marginLeft="10px"
         android:textOff="▶"
         android:background="@drawable/backgroundtheme"
         android:textColor="#ffffff"
         android:textOn="❚❚"
-        android:layout_below="@+id/download"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
         android:onClick="startPause"/>
+
+        <Button
+        android:layout_width="120px"
+        android:layout_height="80px"
+        android:layout_marginLeft="10px"
+        android:id="@+id/next"
+        android:textSize="25dp"
+        android:textColor="#ffffff"
+        android:text="▶▶"
+        android:onClick="nextsong"
+        android:background="@drawable/backgroundtheme"
+        android:layout_column="8" />
+        </TableRow>
+
+    </TableLayout>
 </RelativeLayout>
