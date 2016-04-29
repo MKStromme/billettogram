@@ -3,6 +3,8 @@ package com.example.akam.billettogram;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -52,6 +55,9 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
     public String currentSong;
     public TextView songnavn;
     public TableLayout media;
+    public String bildenavn;
+    public ImageView bildeplass;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +67,7 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
         //mpplayer = new MediaPlayer();
         songnavn = (TextView)findViewById(R.id.songtitle);
         media=(TableLayout)findViewById(R.id.mediatable);
+        bildeplass = (ImageView)findViewById(R.id.imageplass);
         tb=(ToggleButton)findViewById(R.id.playpause);
         db = new DBAdapter(this);
         db.open();
@@ -111,6 +118,41 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
                 e.printStackTrace();
             }
         }
+
+        boolean notimage = true;
+
+        if(cr.getString(cr.getColumnIndex(db.BILDET)).equals("null")) {
+            System.out.println("MMMM" + cr.getString(cr.getColumnIndex(db.BILDET)));
+            notimage = false;
+        }
+        if(notimage){
+
+            File folder = new File(Environment.getExternalStorageDirectory() + File.separator + "Pictures" + File.separator + "Centertainment");
+            if (!folder.exists()) {
+                folder.mkdir();
+                System.out.println("file img make");
+            }
+            bildenavn = cr.getString(cr.getColumnIndex(db.BILDET));
+            boolean isimage = true;
+            System.out.println("for file");
+            String bildeTxt = Environment.getExternalStorageDirectory() + File.separator + "Pictures" + File.separator + "Centertainment" + File.separator + bildenavn;
+            File image = new File(bildeTxt);
+            System.out.println(bildeTxt);
+            if(!image.exists()){
+
+
+                DownloadImage dli = new DownloadImage();
+                try {
+                    dli.execute().get();
+                } catch (InterruptedException e) {
+                    System.out.println("rrrrrrRR" + e.toString());
+                } catch (ExecutionException e) {
+                    System.out.println("rrrrrrRRTT" + e.toString());
+                }
+            }
+        }
+        Bitmap imagebit = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + File.separator + "Pictures" + File.separator + "Centertainment" + File.separator + bildenavn);
+        bildeplass.setImageBitmap(imagebit);
 
     }
     public void lastNedMusikk(View view) {
@@ -407,17 +449,60 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
                     System.out.println("error: " + e.getLocalizedMessage());
                 }
             }
-            /*try {
-                mpplayer.setDataSource(x);
-                System.out.println("llllll1");
-                mpplayer.prepare();
-                System.out.println("llllll2");
-                mpplayer.start();
-                System.out.println("llllll3");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
+
             return null;
         }
     }
+
+    private class DownloadImage extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String x = null;
+            int count;
+            x = Environment.getExternalStorageDirectory() +
+                    File.separator + "Pictures" + File.separator + "Centertainment" + File.separator + bildenavn;
+            try {
+            String parsedstring = bildenavn;
+            parsedstring = parsedstring.replaceAll(" ", "%20");
+            String urlstring = "http://www.barnestasjonen.no/test/images/"+parsedstring;
+            System.out.println("ggggg" + urlstring);
+            URL url = new URL(urlstring);
+            System.out.println("hhhhh");
+            URLConnection conexion = url.openConnection();
+            conexion.connect();
+            // this will be useful so that you can show a tipical 0-100% progress bar
+            int lenghtOfFile = conexion.getContentLength();
+
+            // downlod the file
+            InputStream input = new BufferedInputStream(url.openStream());
+            OutputStream output = new FileOutputStream(x);
+
+                System.out.println("ttttt");
+
+            byte data[] = new byte[1024];
+
+            long total = 0;
+
+            while ((count = input.read(data)) != -1) {
+                total += count;
+                // publishing the progress....
+                publishProgress((int) (total * 100 / lenghtOfFile));
+                output.write(data, 0, count);
+            }
+
+            output.flush();
+            output.close();
+            input.close();
+        }
+            catch (Exception e){
+                System.out.println("eerr" + e.toString());
+
+            }
+            System.out.println("not error");
+
+            return null;
+        }
+    }
+
 }

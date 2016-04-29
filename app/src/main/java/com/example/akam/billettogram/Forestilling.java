@@ -3,8 +3,11 @@ package com.example.akam.billettogram;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -26,6 +30,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,8 +59,8 @@ public class Forestilling extends AppCompatActivity {
     public String s;
     Spinner ant;
     TextView sumtext;
-
-
+    public String bildet;
+    public ImageView bildeplass;
     private String url_getForestilling= "http://barnestasjonen.no/test/db_get_forestilling.php";
 
     @Override
@@ -61,6 +72,7 @@ public class Forestilling extends AppCompatActivity {
 
         ant =(Spinner)findViewById(R.id.antplass);
         sumtext=(TextView)findViewById(R.id.sum);
+        bildeplass = (ImageView)findViewById(R.id.imageplass);
 
         ant.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -84,6 +96,37 @@ public class Forestilling extends AppCompatActivity {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+
+        boolean notimage = true;
+
+        if(notimage){
+
+            File folder = new File(Environment.getExternalStorageDirectory() + File.separator + "Pictures" + File.separator + "Centertainment");
+            if (!folder.exists()) {
+                folder.mkdir();
+                System.out.println("file img make");
+            }
+
+            boolean isimage = true;
+            System.out.println("for file");
+            String bildeTxt = Environment.getExternalStorageDirectory() + File.separator + "Pictures" + File.separator + "Centertainment" + File.separator + bildet;
+            File image = new File(bildeTxt);
+            System.out.println(bildeTxt);
+            if(!image.exists()){
+
+                System.out.println("xxxx");
+                DownloadImage dli = new DownloadImage();
+                try {
+                    dli.execute().get();
+                } catch (InterruptedException e) {
+                    System.out.println("rrrrrrRR" + e.toString());
+                } catch (ExecutionException e) {
+                    System.out.println("rrrrrrRRTT" + e.toString());
+                }
+            }
+        }
+        Bitmap imagebit = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + File.separator + "Pictures" + File.separator + "Centertainment" + File.separator + bildet);
+        bildeplass.setImageBitmap(imagebit);
     }
 
     public void fromExtDB() throws JSONException
@@ -96,6 +139,7 @@ public class Forestilling extends AppCompatActivity {
         TextView antall=(TextView)findViewById((R.id.antled));
         TextView plass=(TextView)findViewById((R.id.place));
         TextView pris =(TextView)findViewById(R.id.pris);
+         
 
 
         for(int i=0;i<arng.length();i++) {
@@ -108,6 +152,10 @@ public class Forestilling extends AppCompatActivity {
             plass.append(arng.getJSONObject(i).getString("fylke"));
             pris.append(arng.getJSONObject(i).getString("pris"));
             sumresult = Integer.parseInt(arng.getJSONObject(i).getString("pris"));
+            System.out.println("ggggggggg" + arng.getJSONObject(i).getString("bilde"));
+
+            bildet = arng.getJSONObject(i).getString("bilde");
+            System.out.println("11111"+bildet);
         }
         /*TextView tit = (TextView)findViewById(R.id.tittel);
         TextView dato = (TextView)findViewById(R.id.dato);
@@ -173,7 +221,7 @@ public class Forestilling extends AppCompatActivity {
             url_getForestilling += "?id=" + s;
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             params.add(new BasicNameValuePair("id", s));
-            JSONObject json = jsonParser.makeHttpRequest(url_getForestilling,"POST", params);
+            JSONObject json = jsonParser.makeHttpRequest(url_getForestilling, "POST", params);
 
             try {
                 if(json != null) {
@@ -184,8 +232,8 @@ public class Forestilling extends AppCompatActivity {
 
                 if (success == 1) {
                     hc = json;
+                    bildet = hc.getString("bilde");
                     System.out.println(json.toString());
-
                 }
                 else{
                 }
@@ -207,5 +255,59 @@ public class Forestilling extends AppCompatActivity {
         }
 
     }
+    private class DownloadImage extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            System.out.println("22222"+bildet);
+            String x = null;
+            int count;
+            x = Environment.getExternalStorageDirectory() +
+                    File.separator + "Pictures" + File.separator + "Centertainment" + File.separator + bildet;
+            System.out.println("aaasss"+x);
+            try {
+                System.out.println(bildet);
+                String parsedstring = bildet;
+                parsedstring = parsedstring.replaceAll(" ", "%20");
+                String urlstring = "http://www.barnestasjonen.no/test/images/"+parsedstring;
+                System.out.println("jjjjjllll" + urlstring);
+                URL url = new URL(urlstring);
+                System.out.println("hhhhh");
+                URLConnection conexion = url.openConnection();
+                conexion.connect();
+                // this will be useful so that you can show a tipical 0-100% progress bar
+                int lenghtOfFile = conexion.getContentLength();
+
+                // downlod the file
+                InputStream input = new BufferedInputStream(url.openStream());
+                OutputStream output = new FileOutputStream(x);
+
+                System.out.println("ttttt");
+
+                byte data[] = new byte[1024];
+
+                long total = 0;
+
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    // publishing the progress....
+                    publishProgress((int) (total * 100 / lenghtOfFile));
+                    output.write(data, 0, count);
+                }
+
+                output.flush();
+                output.close();
+                input.close();
+            }
+            catch (Exception e){
+                System.out.println("eerr" + e.toString());
+
+            }
+            System.out.println("not error");
+
+            return null;
+        }
+    }
+
 
 }

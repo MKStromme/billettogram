@@ -15,9 +15,8 @@
     <ImageView
         android:layout_height="100dp"
         android:layout_width="150dp"
-        android:id="@+id/image"
+        android:id="@+id/imageplass"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/arsho"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/download" />
 
@@ -29,7 +28,7 @@
         android:layout_marginLeft="5dp"
         android:id="@+id/billettstabel"
         android:layout_height="130dp"
-        android:layout_below="@+id/image"
+        android:layout_below="@+id/imageplass"
         android:background="@drawable/backgroundtheme"
         android:layout_alignParentStart="true">
 

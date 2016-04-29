@@ -16,7 +16,7 @@
     <ImageView
         android:layout_height="100dp"
         android:layout_width="150dp"
-        android:id="@+id/image"
+        android:id="@+id/imageplass"
         android:layout_gravity="center"
         android:background="@drawable/arsho"
         android:layout_alignParentTop="true"
@@ -28,7 +28,7 @@
         android:layout_marginLeft="5dp"
         android:id="@+id/forestillingtabell"
         android:layout_height="180dp"
-        android:layout_below="@+id/image"
+        android:layout_below="@+id/imageplass"
         android:background="@drawable/backgroundtheme"
         android:layout_alignParentStart="true">
 
@@ -121,8 +121,9 @@
         android:layout_width="150dp"
         android:layout_height="50dp"
         android:text="Betall"
+        android:background="@drawable/backgroundtheme"
         android:id="@+id/pay"
-
+        android:textColor="#ffffff"
         android:onClick="betall"
         android:layout_below="@+id/pristabell"
         android:layout_centerHorizontal="true" />
