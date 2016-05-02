@@ -46,6 +46,8 @@ public class MineBilletter extends AppCompatActivity {
         setContentView(R.layout.activity_mine_billetter);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         //Gjort nå
         db = new DBAdapter(this);

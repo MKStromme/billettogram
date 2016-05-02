@@ -64,6 +64,8 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
         setContentView(R.layout.activity_billett);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         //mpplayer = new MediaPlayer();
         songnavn = (TextView)findViewById(R.id.songtitle);
         media=(TableLayout)findViewById(R.id.mediatable);

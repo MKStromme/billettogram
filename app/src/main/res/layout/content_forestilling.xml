@@ -18,7 +18,6 @@
         android:layout_width="150dp"
         android:id="@+id/imageplass"
         android:layout_gravity="center"
-        android:background="@drawable/arsho"
         android:layout_alignParentTop="true"
         android:layout_alignEnd="@+id/pay" />
 

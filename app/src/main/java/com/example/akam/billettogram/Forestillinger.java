@@ -83,6 +83,8 @@ public class Forestillinger extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
 
         dagensaktivitet = (ListView) findViewById(R.id.forestillingerlist);

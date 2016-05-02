@@ -1,5 +1,7 @@
 package com.example.akam.billettogram;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.ActionBar;
 import android.app.LauncherActivity;
 import android.content.ContentValues;
@@ -15,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,6 +44,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Pattern;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -59,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     final Context c = this;
     StableArrayAdapter adb;
     public boolean ekstern=false;
+    public static String email;
 
     private   String url_orderedTickets = "http://barnestasjonen.no/test/db_get_billetter.php";
     private   String url_getForestillinger= "http://barnestasjonen.no/test/db_get_frontforestillinger.php";
@@ -95,6 +100,16 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //********
+        Pattern emailpattern = Patterns.EMAIL_ADDRESS;
+        Account[]accounts= AccountManager.get(c).getAccounts();
+        for(Account account:accounts){
+            if(emailpattern.matcher(account.name).matches()){
+                email=account.name;
+                System.out.println("eeee" + email);
+            }
+        }
 
         dagensaktivitet = (ListView) findViewById(R.id.todaylist);
        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems) {
@@ -252,11 +267,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... args) {
-            Log.d("TEST","jeg er her");
+            Log.d("TEST", "jeg er her");
 
             List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-            params.add(new BasicNameValuePair("id", "Ole23@gmail.com"));
+            params.add(new BasicNameValuePair("id", email));
+            //params.add(new BasicNameValuePair("id", "Ole23@gmail.com"));
             params.add(new BasicNameValuePair("type", "android"));
 
             JSONObject json = jsonParser.makeHttpRequest(url_orderedTickets,"POST", params);

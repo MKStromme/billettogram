@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
@@ -63,7 +64,7 @@ public class Coupon extends AppCompatActivity {
         setContentView(R.layout.activity_coupon);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         db = new DBAdapter(this);
         //db.open();
 
@@ -80,14 +81,20 @@ public class Coupon extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        /*int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }*/
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
     }
 
     public void acceptQr(View view) {
@@ -121,7 +128,7 @@ public class Coupon extends AppCompatActivity {
 
             String msg = "";
             List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("id", "Ole23@gmail.com"));
+            params.add(new BasicNameValuePair("id", MainActivity.email));
             params.add(new BasicNameValuePair("kode", args[0].toString()));
             params.add(new BasicNameValuePair("type", "android"));
             params.add(new BasicNameValuePair("antall", args[1].toString()));

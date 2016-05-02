@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -69,6 +70,8 @@ public class Forestilling extends AppCompatActivity {
         setContentView(R.layout.activity_forestilling);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         ant =(Spinner)findViewById(R.id.antplass);
         sumtext=(TextView)findViewById(R.id.sum);
@@ -139,7 +142,7 @@ public class Forestilling extends AppCompatActivity {
         TextView antall=(TextView)findViewById((R.id.antled));
         TextView plass=(TextView)findViewById((R.id.place));
         TextView pris =(TextView)findViewById(R.id.pris);
-         
+
 
 
         for(int i=0;i<arng.length();i++) {
@@ -150,8 +153,9 @@ public class Forestilling extends AppCompatActivity {
             antall.append(arng.getJSONObject(i).getString("ledigePlasser"));
             varighet.append(arng.getJSONObject(i).getString("varighet"));
             plass.append(arng.getJSONObject(i).getString("fylke"));
-            pris.append(arng.getJSONObject(i).getString("pris"));
             sumresult = Integer.parseInt(arng.getJSONObject(i).getString("pris"));
+            double musicPrice = ((sumresult/100.00 * 15.00));
+            pris.append(String.valueOf(sumresult) + " (" + String.valueOf(musicPrice) + ") kr");
             System.out.println("ggggggggg" + arng.getJSONObject(i).getString("bilde"));
 
             bildet = arng.getJSONObject(i).getString("bilde");
@@ -166,7 +170,9 @@ public class Forestilling extends AppCompatActivity {
 
     }
     public void betall(View view) {
-        Intent intent = new Intent(Forestilling.this, Betaling.class);
+        /*Intent intent = new Intent(Forestilling.this, Betaling.class);
+        startActivity(intent);*/
+        Intent intent= new Intent(Intent.ACTION_VIEW, Uri.parse("https://test-ecommerce.payex.com/CreditCard/Pay?orderRef=d3d7c5eb72894abbab7ac2341d141fa7"));
         startActivity(intent);
 
     }
@@ -232,8 +238,9 @@ public class Forestilling extends AppCompatActivity {
 
                 if (success == 1) {
                     hc = json;
-                    bildet = hc.getString("bilde");
-                    System.out.println(json.toString());
+                    System.out.println("zzzzzz"+json.toString());
+                    bildet = hc.getJSONArray("forestilling").getJSONObject(0).getString("bilde");
+                    System.out.println("zzzzzz"+json.toString());
                 }
                 else{
                 }

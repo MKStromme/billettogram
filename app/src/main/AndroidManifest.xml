@@ -4,10 +4,12 @@
 
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- Internet Permissions -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
     <uses-permission android:name="android.permission.STORAGE"></uses-permission>
+    <user-permission android:name="android.permission.GET_ACCOUNTS"/>
 
     <intent-filter>
         <action android:name="android.intent.action.MEDIA_MOUNTED" />
@@ -26,7 +28,6 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -34,11 +35,17 @@
             android:name=".Coupon"
             android:label=""
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.akam.billettogram.MainActivity" />
+         </activity>
+
         <activity
             android:name=".BarcodeScanner"
             android:label=""
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
         <activity
             android:name=".MineBilletter"
             android:label=""
@@ -51,11 +58,11 @@
         <activity
             android:name=".Billett"
             android:label=""
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".MineBilletter"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.akam.billettogram.MainActivity" />
+                android:value="com.example.akam.billettogram.MineBilletter" />
         </activity>
         <activity
             android:name=".Forestillinger"
@@ -69,15 +76,15 @@
         <activity
             android:name=".Forestilling"
             android:label=""
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".Forestillinger"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.akam.billettogram.MainActivity" />
+                android:value="com.example.akam.billettogram.Forestillinger" />
         </activity>
         <activity
             android:name=".Betaling"
-            android:label="@string/title_activity_betaling"
+            android:label=""
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
