@@ -1,6 +1,8 @@
 package com.example.akam.billettogram;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -129,9 +131,18 @@ public class MineBilletter extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
+                        .setTitle("Informasjon")
+                        .setMessage("Her er listen over alle dine billetter. Du gå inn på hver av dem for å sjekke deres infomasjon eller laste ned tilhørende musikk.")
+                        .setCancelable(false)
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                            }
+                        })
+                        .show();
         }
 
         return super.onOptionsItemSelected(item);

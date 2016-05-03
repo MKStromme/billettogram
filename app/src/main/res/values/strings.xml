@@ -22,4 +22,8 @@
     <string name="title_activity_forestillinger">Forestillinger</string>
     <string name="title_activity_forestilling">Forestilling</string>
     <string name="title_activity_betaling">Betaling</string>
+    <string name="title_activity_main_info">mainInfo</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

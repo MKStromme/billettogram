@@ -153,9 +153,18 @@ public class Forestillinger extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
+                        .setTitle("Informasjon")
+                        .setMessage("Her er en liste over alle fremtidige forestillinger. For å kjøpe dem må du klikke på den du ønsker. Det gir deg mer spesifikk informasjon.  ")
+                        .setCancelable(false)
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                            }
+                        })
+                        .show();
         }
 
         return super.onOptionsItemSelected(item);

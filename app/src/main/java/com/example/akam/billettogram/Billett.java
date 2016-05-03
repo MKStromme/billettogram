@@ -1,6 +1,8 @@
 package com.example.akam.billettogram;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -298,11 +300,20 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
+    public boolean onOptionsItemSelected(MenuItem item) {switch (item.getItemId()) {
+        case R.id.action_settings:
+            new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
+                    .setTitle("Informasjon")
+                    .setMessage("Her er billetten med all informasjonen til denne forestillingen.\n\n" +
+                            "Du kan laste ned musikk fra denne forestillingen, samt høre på den her. ")
+                    .setCancelable(false)
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                        }
+                    })
+                    .show();
+    }
 
         return super.onOptionsItemSelected(item);
     }

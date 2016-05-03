@@ -78,23 +78,24 @@ public class Coupon extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        /*int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }*/
         switch (item.getItemId()) {
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            case R.id.action_settings:
+                new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
+                        .setTitle("Informasjon")
+                        .setMessage("Her kan du skrive inn en kode som vil gi deg en billett. Denne billeten fungerer på akkuratt samme måte som andre billetter. \n\n" +
+                                "Du kan velge hvor mange personer du ønsker å ta med opp til 10. \n\n" +
+                                "Du kan kun bruke hver kupong én gang")
+                        .setCancelable(false)
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                            }
+                        })
+                        .show();
         }
 
+        return super.onOptionsItemSelected(item);
     }
 
     public void acceptQr(View view) {
@@ -105,8 +106,6 @@ public class Coupon extends AppCompatActivity {
                 String kode = qrFelt.getText().toString();
                 String antpl = ant.getSelectedItem().toString();
                 new CreateNewProduct().execute(kode,antpl);
-
-
     }
 
     public void couponResult(){

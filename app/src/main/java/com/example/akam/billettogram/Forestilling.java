@@ -1,7 +1,9 @@
 package com.example.akam.billettogram;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -188,9 +190,20 @@ public class Forestilling extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
+                        .setTitle("Informasjon")
+                        .setMessage("Her er informasjonen til denne forestillingen. Du kan kjøpe billett til den fastsatte prisen. \n\n" +
+                                "Når du klikker på betal knappe vil du bli ført til en sikker side som kan motta og bandle din bankinformasjon. \n\n" +
+                                "Når en forestilling er kjøpt kan du laste ned musikken til den. ")
+                        .setCancelable(false)
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                            }
+                        })
+                        .show();
         }
 
         return super.onOptionsItemSelected(item);
