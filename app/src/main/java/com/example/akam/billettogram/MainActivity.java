@@ -51,6 +51,7 @@ import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
+
     ListView dagensaktivitet;
     TextView txt;
     ArrayList<String> listItems = new ArrayList<String>();
@@ -109,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
         for(Account account:accounts){
             if(emailpattern.matcher(account.name).matches()){
                 email=account.name;
-                System.out.println("eeee" + email);
             }
         }
 
@@ -139,7 +139,6 @@ public class MainActivity extends AppCompatActivity {
             dagensaktivitet.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Log.d("TAG2", "vi er in buttonclick");
                     Intent intent = new Intent(c, Billett.class);
                     intent.putExtra("TryThis", adb.getActualId(position));
                     startActivity(intent);
@@ -150,10 +149,7 @@ public class MainActivity extends AppCompatActivity {
             dagensaktivitet.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    System.out.println("lll" + frstlnglist.toString());
-                    System.out.println("index: " + position);
                     frstlng y = frstlnglist.get(position);
-                    System.out.println("ID: " + y.getID() + ". tittel: " + y.getTittel());
 
                     Intent i = new Intent(getApplicationContext(), Forestilling.class);
                     i.putExtra("selectedItem", y.getID());
@@ -180,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean fromLocalDB()
     {
-        Log.d("TAG:","Vi er i localDB");
         db = new DBAdapter(this);
         db.open();
 
@@ -193,8 +188,8 @@ public class MainActivity extends AppCompatActivity {
             do{
                 list.add(cur.getString(cur.getColumnIndex(db.TITTEL)));
                 listId.add(cur.getInt(cur.getColumnIndex(db.ID)));
-                Log.d("tests", ""+cur.getColumnIndex(db.TITTEL));
-                Log.d("tests", "test 2 " + cur.getString(cur.getColumnIndex(db.TITTEL)));
+                //Log.d("tests", ""+cur.getColumnIndex(db.TITTEL));
+                //Log.d("tests", "test 2 " + cur.getString(cur.getColumnIndex(db.TITTEL)));
                 listItems.add(cur.getString(cur.getColumnIndex(db.TITTEL)));
             }while(cur.moveToNext());
             adb = new StableArrayAdapter(this, android.R.layout.simple_list_item_1, list, listId);
@@ -202,14 +197,12 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         cur.close();
-        //tl.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {});
         return false;
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
 
@@ -281,12 +274,10 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... args) {
-            Log.d("TEST", "jeg er her");
 
             List<NameValuePair> params = new ArrayList<NameValuePair>();
 
             params.add(new BasicNameValuePair("id", email));
-            //params.add(new BasicNameValuePair("id", "Ole23@gmail.com"));
             params.add(new BasicNameValuePair("type", "android"));
 
             JSONObject json = jsonParser.makeHttpRequest(url_orderedTickets,"POST", params);
@@ -295,7 +286,6 @@ public class MainActivity extends AppCompatActivity {
                 if(json != null) {
                     success = Integer.parseInt(json.getString("success"));
                     msg = json.toString();
-                    System.out.println("Vi er her:" + msg + "   " + success);
 
                 }
 
@@ -310,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
                     for(int i=0; i <keys.length(); i++){
                         JSONObject tempjson =keys.getJSONObject(i);
 
-                            System.out.println("inne i if");
+
                             ContentValues cv = new ContentValues();
                             cv.put(db.DATE,tempjson.getString("date"));
                             cv.put(db.FID,Integer.parseInt(tempjson.getString("fid")));
@@ -324,9 +314,7 @@ public class MainActivity extends AppCompatActivity {
 
                         db.insert(cv);
 
-                        System.out.println("etter if");
                     }
-                    System.out.println("etter while");
                     db.close();
                 }
                 else{

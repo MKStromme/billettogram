@@ -132,12 +132,7 @@ public class Coupon extends AppCompatActivity {
             params.add(new BasicNameValuePair("type", "android"));
             params.add(new BasicNameValuePair("antall", args[1].toString()));
 
-            // getting JSON Object
-            // Note that create product url accepts POST method
             JSONObject json = jsonParser.makeHttpRequest(url_bestillCoupon,"POST", params);
-            // check log cat fro response
-            // Log.d("Create Response", json.toString());
-            // check for success tag
             try {
                 int success= Integer.parseInt(json.getString("success"));
                 msg=json.getString("message");
@@ -159,15 +154,11 @@ public class Coupon extends AppCompatActivity {
 
 
                     db.insert(cv);
-
-                    //successfully created product
                     Intent i = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(i);
                     finish();
                 }
                 else{
-                    //dialogvindu med json message
-                    //couponResult(json.getString("message"));
                     System.out.println(msg);
                     msg=Html.fromHtml(msg).toString();
                     hk = msg;
@@ -179,8 +170,6 @@ public class Coupon extends AppCompatActivity {
             return null;
         }
         protected void onPostExecute(String file_url) {
-            // dismiss the dialog once done
-            //pDialog.dismiss();
             couponResult();
         }
 

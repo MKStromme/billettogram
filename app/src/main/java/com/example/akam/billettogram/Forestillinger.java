@@ -114,10 +114,7 @@ public class Forestillinger extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                System.out.println("index: "+ position);
                 frstlng y = frstlnglist.get(position);
-                System.out.println("ID: "+y.getID()+ ". tittel: "+y.getTittel());
-
                 Intent i = new Intent(getApplicationContext(), Forestilling.class);
                 i.putExtra("selectedItem", y.getID());
                 startActivity(i);
@@ -223,13 +220,10 @@ public class Forestillinger extends AppCompatActivity {
                 if (json != null) {
                     success = Integer.parseInt(json.getString("success"));
                     msg = json.toString();
-                    System.out.println("Vi er her:" + msg + "   " + success);
-
                 }
 
                 if (success == 1) {
                     hc = json;
-                    System.out.println("jojo"+json.toString());
 
                 }
                 else
@@ -252,7 +246,6 @@ public class Forestillinger extends AppCompatActivity {
         protected void onPostExecute(String file_url) {
             //run code
             try {
-                Log.d("TAG23", "vi er in onpostExecute");
                 if(success == 1) {
                     fromExtDB();
                 }else{

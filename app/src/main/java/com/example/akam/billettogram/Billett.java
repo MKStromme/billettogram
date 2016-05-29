@@ -93,7 +93,6 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
         System.out.println("QQQ "+cr.getString(cr.getColumnIndex(db.SANG)));
 
         if(cr.getString(cr.getColumnIndex(db.SANG)).equals("null")) {
-            System.out.println("MMMM" + cr.getString(cr.getColumnIndex(db.SANG)));
             notsang = false;
             dw.setEnabled(false);
             dw.setText("Ingen sang");
@@ -126,7 +125,6 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
         boolean notimage = true;
 
         if(cr.getString(cr.getColumnIndex(db.BILDET)).equals("null")) {
-            System.out.println("MMMM" + cr.getString(cr.getColumnIndex(db.BILDET)));
             notimage = false;
         }
         if(notimage){
@@ -134,11 +132,9 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
             File folder = new File(Environment.getExternalStorageDirectory() + File.separator + "Pictures" + File.separator + "Centertainment");
             if (!folder.exists()) {
                 folder.mkdir();
-                System.out.println("file img make");
             }
             bildenavn = cr.getString(cr.getColumnIndex(db.BILDET));
             boolean isimage = true;
-            System.out.println("for file");
             String bildeTxt = Environment.getExternalStorageDirectory() + File.separator + "Pictures" + File.separator + "Centertainment" + File.separator + bildenavn;
             File image = new File(bildeTxt);
             System.out.println(bildeTxt);
@@ -149,9 +145,7 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
                 try {
                     dli.execute().get();
                 } catch (InterruptedException e) {
-                    System.out.println("rrrrrrRR" + e.toString());
                 } catch (ExecutionException e) {
-                    System.out.println("rrrrrrRRTT" + e.toString());
                 }
             }
         }
@@ -163,37 +157,31 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
         File appfolder = new File(getFilesDir() + File.separator + "Music");
         if(!appfolder.exists()){
             appfolder.mkdir();
-            System.out.println("kkkkk");
         }
         appfolder = new File(getFilesDir() + File.separator + "Music" + File.separator + "Centertainment");
         if(!appfolder.exists()){
             appfolder.mkdir();
-            System.out.println("pppp");
         }
         appfolder = new File(getFilesDir() + File.separator + "Music" + File.separator + "Centertainment" + File.separator + tittel);
         if(!appfolder.exists()){
             appfolder.mkdir();
-            System.out.println("pppp");
         }
         File folder = new File(Environment.getExternalStorageDirectory() +
                 File.separator + "Music");
         if (!folder.exists()) {
             folder.mkdir();
-            System.out.println("file make");
         }
         folder = new File(Environment.getExternalStorageDirectory() +
                 File.separator + "Music" + File.separator + "Centertainment");
 
         if (!folder.exists()) {
             folder.mkdir();
-            System.out.println("file make");
         }
         folder = new File(Environment.getExternalStorageDirectory() +
                 File.separator + "Music" + File.separator + "Centertainment" + File.separator + tittel);
 
         if (!folder.exists()) {
             folder.mkdir();
-            System.out.println("file make");
         }
 
 
@@ -233,9 +221,7 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
 
 
     public void backsong(View v) throws JSONException, IOException {
-        System.out.println("back");
         if(sangstring.getString(0).equals(currentSong)){
-            System.out.println("back2");
             mpplayer.stop();
             mpplayer.reset();
             mpplayer.setDataSource(Environment.getExternalStorageDirectory() + File.separator + "Music" + File.separator + "Centertainment" + File.separator + tittel + File.separator + sangstring.getString(0));
@@ -247,14 +233,11 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
         }
         for(int i = 1; i < sangstring.length(); i++){
             if(sangstring.getString(i).equals(currentSong)) {
-                System.out.println("back3");
                 mpplayer.stop();
                 mpplayer.reset();
 
                 mpplayer.setDataSource(Environment.getExternalStorageDirectory() + File.separator + "Music" + File.separator + "Centertainment" + File.separator + tittel + File.separator + sangstring.getString(i - 1));
-                System.out.println("pomfritt" + Environment.getExternalStorageDirectory() + File.separator + "Music" + File.separator + "Centertainment" + File.separator + sangstring.getString(i - 1));
                 currentSong = sangstring.getString(i-1);
-                System.out.println("pompom " + currentSong);
                 songnavn.setText(currentSong);
                 mpplayer.prepare();
                 if(tb.getText().equals("❚❚")) {
@@ -265,21 +248,16 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
         }
     }
     public void nextsong(View v) throws JSONException, IOException {
-        System.out.println("next");
         if(sangstring.getString(sangstring.length()-1).equals(currentSong)){
-            System.out.println("next2");
             mpplayer.stop();
             return;
         }
         for(int i = 0; i < sangstring.length(); i++){
-            System.out.println("next3 " + currentSong + "  -  " + sangstring.getString(i));
             if(sangstring.getString(i).equals(currentSong)) {
                 mpplayer.stop();
                 mpplayer.reset();
                 mpplayer.setDataSource(Environment.getExternalStorageDirectory() + File.separator + "Music" + File.separator + "Centertainment" + File.separator + tittel + File.separator + sangstring.getString(i+1));
-                System.out.println("pomfritt" + Environment.getExternalStorageDirectory() + File.separator + "Music" + File.separator + "Centertainment" + File.separator + sangstring.getString(i + 1));
                 currentSong = sangstring.getString(i+1);
-                System.out.println("pompom " + currentSong);
                 songnavn.setText(currentSong);
                 mpplayer.prepare();
 
@@ -300,22 +278,34 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {switch (item.getItemId()) {
-        case R.id.action_settings:
-            new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
-                    .setTitle("Informasjon")
-                    .setMessage("Her er billetten med all informasjonen til denne forestillingen.\n\n" +
-                            "Du kan laste ned musikk fra denne forestillingen, samt høre på den her. ")
-                    .setCancelable(false)
-                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
+                        .setTitle("Informasjon")
+                        .setMessage("Her er billetten med all informasjonen til denne forestillingen.\n\n" +
+                                "Du kan laste ned musikk fra denne forestillingen, samt høre på den her. ")
+                        .setCancelable(false)
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
 
-                        }
-                    })
-                    .show();
-    }
+                            }
+                        })
+                        .show();
+                break;
 
-        return super.onOptionsItemSelected(item);
+            case android.R.id.home:
+                finish();
+                if(mpplayer != null)
+                mpplayer.stop();
+                break;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+    return true;
+
     }
 
     @Override
@@ -378,11 +368,9 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
         try {
             mpplayer = new MediaPlayer();
             mpplayer.setDataSource(Environment.getExternalStorageDirectory() + File.separator + "Music" + File.separator + "Centertainment" + File.separator + tittel + File.separator + sangstring.getString(0));
-            System.out.println("llllll1");
             mpplayer.prepare();
             currentSong = sangstring.getString(0);
             songnavn.setText(currentSong);
-            System.out.println("llllll2"+currentSong);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -397,7 +385,6 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
 
         @Override
         protected String doInBackground(String... urlParams) {
-            System.out.println("Magnus" + sangstring);
             int count;
             String x = null;
             try {
@@ -412,11 +399,8 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
                 try {
                     String parsedstring = sangstring.getString(i);
                     parsedstring = parsedstring.replaceAll(" ", "%20");
-                    System.out.println("Akam"+ sangstring.get(i));
                     String urlstring = "http://www.barnestasjonen.no/test/songs/"+parsedstring;
-                    System.out.println("ggggg" + urlstring);
                     URL url = new URL(urlstring);
-                    System.out.println("hhhhh");
                     URLConnection conexion = url.openConnection();
                     conexion.connect();
                     // this will be useful so that you can show a tipical 0-100% progress bar
@@ -450,14 +434,6 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
                     input.close();
 
 
-
-                    //sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
-                   // sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
-
-                    /*Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                    intent.setData(Uri.fromFile(file));
-                    sendBroadcast(intent);*/
-
                 } catch (Exception e) {
                     System.out.println("error: " + e.getLocalizedMessage());
                 }
@@ -479,9 +455,7 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
             String parsedstring = bildenavn;
             parsedstring = parsedstring.replaceAll(" ", "%20");
             String urlstring = "http://www.barnestasjonen.no/test/images/"+parsedstring;
-            System.out.println("ggggg" + urlstring);
             URL url = new URL(urlstring);
-            System.out.println("hhhhh");
             URLConnection conexion = url.openConnection();
             conexion.connect();
             // this will be useful so that you can show a tipical 0-100% progress bar
@@ -490,8 +464,6 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
             // downlod the file
             InputStream input = new BufferedInputStream(url.openStream());
             OutputStream output = new FileOutputStream(x);
-
-                System.out.println("ttttt");
 
             byte data[] = new byte[1024];
 
@@ -512,7 +484,6 @@ public class Billett extends AppCompatActivity implements MediaController.MediaP
                 System.out.println("eerr" + e.toString());
 
             }
-            System.out.println("not error");
 
             return null;
         }

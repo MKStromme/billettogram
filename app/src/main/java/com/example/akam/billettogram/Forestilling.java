@@ -109,24 +109,19 @@ public class Forestilling extends AppCompatActivity {
             File folder = new File(Environment.getExternalStorageDirectory() + File.separator + "Pictures" + File.separator + "Centertainment");
             if (!folder.exists()) {
                 folder.mkdir();
-                System.out.println("file img make");
             }
 
             boolean isimage = true;
-            System.out.println("for file");
             String bildeTxt = Environment.getExternalStorageDirectory() + File.separator + "Pictures" + File.separator + "Centertainment" + File.separator + bildet;
             File image = new File(bildeTxt);
             System.out.println(bildeTxt);
             if(!image.exists()){
 
-                System.out.println("xxxx");
                 DownloadImage dli = new DownloadImage();
                 try {
                     dli.execute().get();
                 } catch (InterruptedException e) {
-                    System.out.println("rrrrrrRR" + e.toString());
                 } catch (ExecutionException e) {
-                    System.out.println("rrrrrrRRTT" + e.toString());
                 }
             }
         }
@@ -149,7 +144,6 @@ public class Forestilling extends AppCompatActivity {
 
         for(int i=0;i<arng.length();i++) {
             arng.getJSONObject(i).getString("tittel");
-            System.out.println("ggggggggg" + arng.getJSONObject(i).getString("tittel"));
             tit.append(arng.getJSONObject(i).getString("tittel"));
             dato.append(arng.getJSONObject(i).getString("dato"));
             antall.append(arng.getJSONObject(i).getString("ledigePlasser"));
@@ -158,10 +152,8 @@ public class Forestilling extends AppCompatActivity {
             sumresult = Integer.parseInt(arng.getJSONObject(i).getString("pris"));
             double musicPrice = ((sumresult/100.00 * 15.00));
             pris.append(String.valueOf(sumresult) + " (" + String.valueOf(musicPrice) + ") kr");
-            System.out.println("ggggggggg" + arng.getJSONObject(i).getString("bilde"));
 
             bildet = arng.getJSONObject(i).getString("bilde");
-            System.out.println("11111"+bildet);
         }
         /*TextView tit = (TextView)findViewById(R.id.tittel);
         TextView dato = (TextView)findViewById(R.id.dato);
@@ -246,14 +238,11 @@ public class Forestilling extends AppCompatActivity {
                 if(json != null) {
                     success = Integer.parseInt(json.getString("success"));
                     msg = json.toString();
-                    System.out.println("Vi er her:" + msg + "   " + success);
                 }
 
                 if (success == 1) {
                     hc = json;
-                    System.out.println("zzzzzz"+json.toString());
                     bildet = hc.getJSONArray("forestilling").getJSONObject(0).getString("bilde");
-                    System.out.println("zzzzzz"+json.toString());
                 }
                 else{
                 }
@@ -279,20 +268,16 @@ public class Forestilling extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            System.out.println("22222"+bildet);
             String x = null;
             int count;
             x = Environment.getExternalStorageDirectory() +
                     File.separator + "Pictures" + File.separator + "Centertainment" + File.separator + bildet;
-            System.out.println("aaasss"+x);
             try {
                 System.out.println(bildet);
                 String parsedstring = bildet;
                 parsedstring = parsedstring.replaceAll(" ", "%20");
                 String urlstring = "http://www.barnestasjonen.no/test/images/"+parsedstring;
-                System.out.println("jjjjjllll" + urlstring);
                 URL url = new URL(urlstring);
-                System.out.println("hhhhh");
                 URLConnection conexion = url.openConnection();
                 conexion.connect();
                 // this will be useful so that you can show a tipical 0-100% progress bar
@@ -302,7 +287,6 @@ public class Forestilling extends AppCompatActivity {
                 InputStream input = new BufferedInputStream(url.openStream());
                 OutputStream output = new FileOutputStream(x);
 
-                System.out.println("ttttt");
 
                 byte data[] = new byte[1024];
 
@@ -320,10 +304,8 @@ public class Forestilling extends AppCompatActivity {
                 input.close();
             }
             catch (Exception e){
-                System.out.println("eerr" + e.toString());
 
             }
-            System.out.println("not error");
 
             return null;
         }

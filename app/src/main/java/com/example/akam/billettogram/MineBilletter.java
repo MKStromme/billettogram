@@ -75,7 +75,6 @@ public class MineBilletter extends AppCompatActivity {
         dagensaktivitet.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("TAG2", "vi er in buttonclick");
                 Intent intent = new Intent(c, Billett.class);
                 intent.putExtra("TryThis", adb.getActualId(position));
                 startActivity(intent);
@@ -95,7 +94,6 @@ public class MineBilletter extends AppCompatActivity {
     private boolean fromLocalDB()
     {
 
-        Log.d("TAG:","Vi er i localDB");
         db = new DBAdapter(this);
         db.open();
 
@@ -108,8 +106,8 @@ public class MineBilletter extends AppCompatActivity {
             do{
                 list.add(cur.getString(cur.getColumnIndex(db.TITTEL)));
                 listId.add(cur.getInt(cur.getColumnIndex(db.ID)));
-                Log.d("tests", ""+cur.getColumnIndex(db.TITTEL));
-                Log.d("tests", "test 2 " + cur.getString(cur.getColumnIndex(db.TITTEL)));
+                //Log.d("tests", ""+cur.getColumnIndex(db.TITTEL));
+                //Log.d("tests", "test 2 " + cur.getString(cur.getColumnIndex(db.TITTEL)));
                 listItems.add(cur.getString(cur.getColumnIndex(db.TITTEL)));
             }while(cur.moveToNext());
             adb = new StableArrayAdapter(this, android.R.layout.simple_list_item_1, list, listId);
@@ -117,7 +115,6 @@ public class MineBilletter extends AppCompatActivity {
             return true;
         }
         cur.close();
-        //tl.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {});
         return false;
 
     }
