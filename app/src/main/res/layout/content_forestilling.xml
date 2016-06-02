@@ -119,7 +119,7 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="150dp"
         android:layout_height="50dp"
-        android:text="Betall"
+        android:text="Betal"
         android:background="@drawable/backgroundtheme"
         android:id="@+id/pay"
         android:textColor="#ffffff"
